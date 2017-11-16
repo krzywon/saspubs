@@ -46,5 +46,6 @@ def update_JIF_bytitle(values):
             title = v["container-title"].upper()
             if title in lookup:
                 for k in EXPORT_KEYS:
+                    print(k, lookup[title][k])
                     v[k] = float(lookup[title][k])
                 

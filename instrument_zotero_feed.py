@@ -4,6 +4,8 @@ import os
 import urllib
 import re
 
+import JIF
+
 # zotero group ids
 #https://api.zotero.org/groups/1942669/items/top?start=0&limit=25&format=atom&v=1
 #https://api.zotero.org/groups/1942669/collections/29DQ33DH/items/top?start=0&limit=25&format=atom&v=1
@@ -26,7 +28,6 @@ INSTRUMENTS = {
     }
 }
 
-NCNR_INSTRUMENTS_ID = 1942669
 VERSIONS = "format=versions"
 ZOTERO_API = "https://api.zotero.org"
 
@@ -34,7 +35,11 @@ TARGET_DIRECTORY = "./"
 
 DOI_IN_EXTRA = re.compile(r'DOI:\s+([^\s]+)')
 
-crossref_json_headers = {"Accept": "application/vnd.citationstyles.csl+json"}
+crossref_json_headers = {
+    "Accept": "application/vnd.citationstyles.csl+json",
+    "User-Agent": "NCNR Publications Manager (https://ncnr.nist.gov/publications/publications_browser.html; mailto:brian.maranville@nist.gov)"
+}
+
 crossref_keys_to_import = [
     "title",
     "author",
@@ -57,7 +62,7 @@ zotero_to_crossref = {
 
 CSL_DATA_PATH = "./csl_data"
 
-def process_instrument(instrument):
+def process_instrument(instrument, include_JIF=True):
     # get revision number
     group_path = "groups/" + INSTRUMENTS[instrument]["group"]
     collection = INSTRUMENTS[instrument].get("collection", None)
@@ -99,6 +104,8 @@ def process_instrument(instrument):
     print("new data:", len(new_data), [item['id'] for item in new_data])
     deleted_data = requests.get("%s/deleted?since=%d&format=json" % (group_endpoint, old_version)).json()
     print("to delete:", deleted_data)
+    #if include_JIF:
+    #    JIF.update_JIF_bytitle(new_data)
     for key, item in zip(keys_to_update, new_data):
         #key = item['key']
         data = item
@@ -113,12 +120,20 @@ def process_instrument(instrument):
         del db[key]
     version_data["version"] = new_version
     open(version_file, "w").write(json.dumps(version_data, indent=2))
+    if include_JIF:
+        JIF.update_JIF_bytitle(db.values())
     open(csl_db_file, "w").write(json.dumps(db))
     
 def csl_from_crossref(doi, filter_keys=False):
     escaped_doi = urllib.parse.quote(doi)
     print(doi, escaped_doi)
-    rj = requests.get("https://api.crossref.org/works/%s/transform/application/vnd.citationstyles.csl+json" % (escaped_doi,)) #, headers = crossref_json_headers)
+    transform = "application/vnd.citationstyles.csl+json"
+    mailto = "mailto:brian.maranville@nist.gov"
+    request_url = "https://api.crossref.org/works/{doi}/transform/{transform}?{mailto}".format(doi=escaped_doi, transform=transform, mailto=mailto)
+    print(request_url)
+    #rj = requests.get("https://api.crossref.org/works/%s/transform/application/vnd.citationstyles.csl+json" % (escaped_doi,)) #, headers = crossref_json_headers)
+    rj = requests.get(request_url)
+    print(rj.text)
     entry = {}
     try: 
         content = rj.json()
