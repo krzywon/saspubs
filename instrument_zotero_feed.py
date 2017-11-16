@@ -44,6 +44,7 @@ crossref_keys_to_import = [
     "page",
     "article-number",
     "issued",
+    "ISSN",
     "DOI",
     "URL",
     "type",
@@ -53,7 +54,8 @@ crossref_keys_to_import = [
 zotero_to_crossref = {
     "date": ["issued", "raw"]
 }
-    
+
+CSL_DATA_PATH = "./csl_data"
 
 def process_instrument(instrument):
     # get revision number
@@ -64,8 +66,8 @@ def process_instrument(instrument):
     else:
         collection_path = group_path
     
-    version_file = os.path.join(os.curdir, '.%s_version' % (instrument))
-    csl_db_file = os.path.join(os.curdir, '%s_CSL_data.json' % (instrument))
+    version_file = os.path.join(CSL_DATA_PATH, '.%s_version' % (instrument))
+    csl_db_file = os.path.join(CSL_DATA_PATH, instrument + ".json")
     if not os.path.isfile(version_file):
         version_data = {}
     else:
@@ -113,7 +115,7 @@ def process_instrument(instrument):
     open(version_file, "w").write(json.dumps(version_data, indent=2))
     open(csl_db_file, "w").write(json.dumps(db))
     
-def csl_from_crossref(doi, filter_keys=True):
+def csl_from_crossref(doi, filter_keys=False):
     escaped_doi = urllib.parse.quote(doi)
     print(doi, escaped_doi)
     rj = requests.get("https://api.crossref.org/works/%s/transform/application/vnd.citationstyles.csl+json" % (escaped_doi,)) #, headers = crossref_json_headers)
