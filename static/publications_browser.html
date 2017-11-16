@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <meta name="viewport" content="width=400, initial-scale=1"> 
@@ -19,7 +20,6 @@
   <script src="js/jquery.layout-latest.js"></script>
   <script src="js/geturlvars.js"></script>
   <script src="js/array-find-polyfill.js"></script>
-  <script src="js/object-values-polyfill.js"></script>
   <script src="https://cdn.datatables.net/v/dt/dt-1.10.16/b-1.4.2/sl-1.2.3/datatables.min.js" type="text/javascript"></script>
 
   <script type="text/javascript">
@@ -77,14 +77,14 @@
     function change_instrument(instrument) {
       var instr = instruments.find(function(s) { return s.id == instrument });
       var instrument_path = instr.ncnrdata_id || instrument.toLowerCase();
-      $.getJSON(instrument + '.json', function(result) {
-        var data = (result instanceof Array) ? result : Object.values(result);
+      $.getJSON('../csl_data/' + instrument + '.json', function(result) {
+        var data = (result instanceof Array) ? result : Object.keys(result).map(function(k) { return result[k] });
     //.filter(function(v) { return v.id });
     if (mainTable == null) {
       mainTable = $("table#experiments").dataTable({
         data: data,
         select: false,
-        order: [[6, "desc"]],
+        order: [[7, "desc"]],
         /*
         dom: 'lfrtBip',
         buttons: [
@@ -114,6 +114,7 @@
           { data: 'title', title: 'title', render: renderTitle },
           { data: 'author', title: 'authors', render: renderAuthors },
           { data: 'is-referenced-by-count', title: 'citations', defaultContent: '--' },
+          { data: 'Journal Impact Factor', title: 'JIF', render: renderJIF},
           { data: function(r) { return r['container-title-short'] || r['container-title'] || '--'}, title: 'journal'},
           { data: 'volume', title: 'volume', defaultContent: '--', className: "column-volume"},
           { data: function(r) { return r['page'] || r['article-number'] || '--'}, title: 'page', defaultContent: '--'},
@@ -158,12 +159,21 @@
       return ts;
     }
     
+    function renderJIF(d, type, row) {
+      //console.log("JIF:", d);
+      if (type !== 'display') {
+        return d || 0;
+      }
+      return parseFloat(d);
+    }
+    
     function renderYear(d, type, row) {
       console.log(type);
       var ts = getTimestring(d);
       var year = ts.split("-")[0] || "";
       if (type !== 'display' ) {
-          return new Date(ts).toISOString();
+          return ts
+          //return new Date(ts).toISOString();
       }
       return "<span class=\"year\" title=\"" + ts + "\">" + year + "</span>";
     }
@@ -374,13 +384,12 @@
         <h2>Publications Browser</h2>
     </div>
     <div class="header instrument-name">
-  <div>
-      <h3>Instrument: </h3>
-      <select id="instrument"></select>
-  </div>
+      <div>
+          <h3>Instrument: </h3>
+          <select id="instrument"></select>
+      </div>
     </div>
     <span id="queue_state"></span>
-    </div>
 </div>
 <div id="east_panel" class="ui-layout-east-no">
 </div>
