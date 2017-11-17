@@ -27,8 +27,8 @@ if __name__=='__main__':
     server_connection = SFTPConnection()
     server_connection.connect()
     if len(sys.argv) > 1:
-        push_instrument(sys.argv[1])
+        push_instrument(sys.argv[1], server_connection)
         
     else: 
         for instrument in INSTRUMENTS:
-            push_instrument(instrument)
+            push_instrument(instrument, server_connection)
