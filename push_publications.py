@@ -17,7 +17,7 @@ def push_instrument(instrument, server_connection):
         new_mtime = os.stat(db_filename).st_mtime
         old_mtime = version_info.get("file_mtime", 0)
         if new_mtime > old_mtime:
-            server_connection.sftp.put(db_filename, REMOTE_PATH + db_filename)
+            server_connection.sftp.put(db_filename, REMOTE_PATH + 'data/' + db_filename)
             version_info["file_mtime"] = new_mtime
             open(version_path, "w").write(json.dumps(version_info, 2))
             

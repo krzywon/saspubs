@@ -33,4 +33,4 @@ crossref_keys_to_import = [
 DB_PATH = "./csl_data"
 DB_FILENAME_FMT = "{db_path}/{instrument}.json"
 VERSION_FILENAME_FMT = "{db_path}/.{instrument}_version.json"
-REMOTE_PATH = "/var/www/html/publications/data/"
+REMOTE_PATH = "/var/www/html/publications/"
