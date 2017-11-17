@@ -5,7 +5,8 @@ import JIF
 from config import INSTRUMENTS, DB_PATH, DB_FILENAME_FMT
 
 def update_JIF_inplace(instrument):
-    db_file_path = DB_FILENAME_FMT.format(db_path=DB_PATH, instrument=instrument)
+    db_filename = DB_FILENAME_FMT.format(instrument=instrument)
+    db_file_path = os.path.join(DB_PATH, db_filename)
     try:
         db = json.loads(open(db_file_path).read())
         JIF.update_JIF_by_either(db.values())

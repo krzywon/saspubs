@@ -41,16 +41,18 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     else:
         collection_path = group_path
     
-    version_file = VERSION_FILENAME_FMT.format(db_path=DB_PATH, instrument=instrument)
-    csl_db_file = DB_FILENAME_FMT.format(db_path=DB_PATH, instrument=instrument)
-    if not os.path.isfile(version_file):
+    version_filename = VERSION_FILENAME_FMT.format(instrument=instrument)
+    csl_db_filename = DB_FILENAME_FMT.format(instrument=instrument)
+    version_path = os.path.join(DB_PATH, version_filename)
+    csl_db_path = os.path.join(DB_PATH, csl_db_filename)
+    if not os.path.isfile(version_path):
         version_data = {}
     else:
-        version_data = json.loads(open(version_file).read())
-    if not os.path.isfile(csl_db_file):
+        version_data = json.loads(open(version_path).read())
+    if not os.path.isfile(csl_db_path):
         db = {}
     else:
-        db = json.loads(open(csl_db_file, 'r').read())
+        db = json.loads(open(csl_db_path, 'r').read())
     collection_endpoint = ZOTERO_API + "/" + collection_path
     group_endpoint = ZOTERO_API + "/" + group_path
 
@@ -98,10 +100,10 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
         del db[key]
         
     version_data["version"] = new_version
-    open(version_file, "w").write(json.dumps(version_data, indent=2))
+    open(version_path, "w").write(json.dumps(version_data, indent=2))
     if include_JIF:
         JIF.update_JIF_by_either(db.values())
-    open(csl_db_file, "w").write(json.dumps(db))
+    open(csl_db_path, "w").write(json.dumps(db))
     
 def csl_from_crossref(doi):
     escaped_doi = quote(doi)

@@ -31,6 +31,6 @@ crossref_keys_to_import = [
 ]
 
 DB_PATH = "./data"
-DB_FILENAME_FMT = "{db_path}/{instrument}.json"
-VERSION_FILENAME_FMT = "{db_path}/.{instrument}_version.json"
+DB_FILENAME_FMT = "{instrument}.json"
+VERSION_FILENAME_FMT = ".{instrument}_version.json"
 REMOTE_PATH = "/var/www/html/publications/"
