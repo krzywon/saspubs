@@ -1,6 +1,7 @@
 import json
 import csv
 
+DEBUG = False
 CSV_SOURCE_FILE = "JournalHomeGrid.csv"
 SKIP_LINES = 1
 EXPORT_KEYS = [
@@ -46,7 +47,7 @@ def update_JIF_bytitle(values):
             title = v["container-title"].upper()
             if title in lookup:
                 for k in EXPORT_KEYS:
-                    print(k, lookup[title][k])
+                    if DEBUG: print(k, lookup[title][k])
                     v[k] = float(lookup[title][k])
                 
 def update_JIF_by_either(values):
@@ -66,6 +67,6 @@ def update_JIF_by_either(values):
             if title in title_lookup:
                 found = True
                 for k in EXPORT_KEYS:
-                    print(k, title_lookup[title][k])
+                    if DEBUG: print(k, title_lookup[title][k])
                     v[k] = float(title_lookup[title][k])
     

@@ -4,29 +4,10 @@ import os
 import urllib
 import re
 
+from config import INSTRUMENTS, crossref_keys_to_import, DB_PATH, DB_FILENAME_FMT, VERSION_FILENAME_FMT
 import JIF
 
-# zotero group ids
-#https://api.zotero.org/groups/1942669/items/top?start=0&limit=25&format=atom&v=1
-#https://api.zotero.org/groups/1942669/collections/29DQ33DH/items/top?start=0&limit=25&format=atom&v=1
-#https://api.zotero.org/groups/1942136/collections/5FB99F7A/items/top?start=0&limit=25&format=atom&v=1
-#https://api.zotero.org/groups/1942669/collections/RV37EK44/items/top?start=0&limit=25&format=atom&v=1
-
-INSTRUMENTS = {
-    
-    "MAGIK": {
-        "group": "1942669",
-        "collection": "29DQ33DH"
-    },
-    "PBR": {
-        "group": "1942136",
-        #"collection": "5FB99F7A"
-    },
-    "NG7SANS": {
-        "group": "1942669",
-        "collection": "RV37EK44"
-    }
-}
+DEBUG = True
 
 VERSIONS = "format=versions"
 ZOTERO_API = "https://api.zotero.org"
@@ -40,29 +21,13 @@ crossref_json_headers = {
     "User-Agent": "NCNR Publications Manager (https://ncnr.nist.gov/publications/publications_browser.html; mailto:brian.maranville@nist.gov)"
 }
 
-crossref_keys_to_import = [
-    "title",
-    "author",
-    "container-title-short",
-    "container-title",
-    "volume",
-    "page",
-    "article-number",
-    "issued",
-    "ISSN",
-    "DOI",
-    "URL",
-    "type",
-    "is-referenced-by-count"
-]
-
 zotero_to_crossref = {
     "date": ["issued", "raw"]
 }
 
-CSL_DATA_PATH = "./csl_data"
 
-def process_instrument(instrument, include_JIF=True):
+
+def process_zotero(instrument, include_JIF=True, filter_keys=True):
     # get revision number
     group_path = "groups/" + INSTRUMENTS[instrument]["group"]
     collection = INSTRUMENTS[instrument].get("collection", None)
@@ -71,8 +36,8 @@ def process_instrument(instrument, include_JIF=True):
     else:
         collection_path = group_path
     
-    version_file = os.path.join(CSL_DATA_PATH, '.%s_version' % (instrument))
-    csl_db_file = os.path.join(CSL_DATA_PATH, instrument + ".json")
+    version_file = VERSION_FILENAME_FMT.format(db_path=DB_PATH, instrument=instrument)
+    csl_db_file = DB_FILENAME_FMT.format(db_path=DB_PATH, instrument=instrument)
     if not os.path.isfile(version_file):
         version_data = {}
     else:
@@ -83,13 +48,18 @@ def process_instrument(instrument, include_JIF=True):
         db = json.loads(open(csl_db_file, 'r').read())
     collection_endpoint = ZOTERO_API + "/" + collection_path
     group_endpoint = ZOTERO_API + "/" + group_path
-    #collection_data = requests.get(collection_endpoint).json()
-    #new_collection_version = collection_data.get("version", -1)
+
     old_version = version_data.get("version", 0)
     to_update = requests.get("%s/items?since=%d&format=versions" % (collection_endpoint, old_version)).json()
+    deleted_data = requests.get("%s/deleted?since=%d&format=json" % (group_endpoint, old_version)).json()
     keys_to_update = list(to_update.keys())
     number_to_update = len(keys_to_update)
-    new_version = max(list(to_update.values())) if number_to_update > 0 else old_version
+    number_to_delete = len(deleted_data.get("items", []))
+    if number_to_update == 0 and number_to_delete == 0:
+        # then nothing has changed.  we're done.
+        return
+        
+    new_version = max(list(to_update.values()))
     counter = 0
     step = 25 # can only get a limited number of items from zotero at once
     new_data = []
@@ -101,55 +71,52 @@ def process_instrument(instrument, include_JIF=True):
         new_data.extend(partial_data["items"])
         print(partial_data["items"])
         counter += step
-    print("new data:", len(new_data), [item['id'] for item in new_data])
+    if DEBUG: print("new data:", len(new_data), [item['id'] for item in new_data])
     deleted_data = requests.get("%s/deleted?since=%d&format=json" % (group_endpoint, old_version)).json()
-    print("to delete:", deleted_data)
-    #if include_JIF:
-    #    JIF.update_JIF_bytitle(new_data)
+    if DEBUG: print("to delete:", deleted_data)
+
     for key, item in zip(keys_to_update, new_data):
         #key = item['key']
         data = item
+        db[key] = data
         if 'DOI' in data and not data['DOI'] == "":
-            db[key] = csl_from_crossref(data['DOI'])
+            crossref_data = csl_from_crossref(data['DOI'])
+            if entry is not None: 
+                db[key].update(crossref_data)
         elif DOI_IN_EXTRA.match(data.get("extra", "")):
             DOI = DOI_IN_EXTRA.match(data.get("extra", "")).groups()[0]
-            db[key] = csl_from_crossref(DOI)
-        else:
-            db[key] = data
+            crossref_data = csl_from_crossref(DOI)
+            if entry is not None: 
+                db[key].update(crossref_data)
+                
     for key in deleted_data['items']:
         del db[key]
+        
     version_data["version"] = new_version
     open(version_file, "w").write(json.dumps(version_data, indent=2))
     if include_JIF:
         JIF.update_JIF_by_either(db.values())
     open(csl_db_file, "w").write(json.dumps(db))
     
-def csl_from_crossref(doi, filter_keys=False):
+def csl_from_crossref(doi):
     escaped_doi = urllib.parse.quote(doi)
-    print(doi, escaped_doi)
+    if DEBUG: print(doi, escaped_doi)
     transform = "application/vnd.citationstyles.csl+json"
     mailto = "mailto:brian.maranville@nist.gov"
     request_url = "https://api.crossref.org/works/{doi}/transform/{transform}?{mailto}".format(doi=escaped_doi, transform=transform, mailto=mailto)
-    print(request_url)
-    #rj = requests.get("https://api.crossref.org/works/%s/transform/application/vnd.citationstyles.csl+json" % (escaped_doi,)) #, headers = crossref_json_headers)
     rj = requests.get(request_url)
-    print(rj.text)
-    entry = {}
     try: 
         content = rj.json()
-        if filter_keys:
-            entry.update(dict([(k, content.get(k, None)) for k in crossref_keys_to_import if content.get(k, None) is not None]))
-        else:
-            entry.update(content)
-    except Exception:
-        print("not processing %s because of error: text" % (doi,))
-    return entry
+        return content
+    except Exception as e:
+        print("not processing doi: %s because of error: %s" % (doi,str(e)))
+        return None
 
 if __name__=='__main__':
     import sys
     if len(sys.argv) > 1:
-        process_instrument(sys.argv[1])
+        process_zotero(sys.argv[1])
         
     else: 
         for instrument in INSTRUMENTS:
-            process_instrument(instrument)
+            process_zotero(instrument)
