@@ -29,8 +29,8 @@ def push_instrument(instrument):
 if __name__=='__main__':
     import sys
     if len(sys.argv) > 1:
-        push_instrument(sys.argv[1], server_connection)
+        push_instrument(sys.argv[1])
         
     else: 
         for instrument in INSTRUMENTS:
-            push_instrument(instrument, server_connection)
+            push_instrument(instrument)
