@@ -30,7 +30,7 @@ crossref_keys_to_import = [
     "is-referenced-by-count"
 ]
 
-DB_PATH = "./csl_data"
+DB_PATH = "./data"
 DB_FILENAME_FMT = "{db_path}/{instrument}.json"
 VERSION_FILENAME_FMT = "{db_path}/.{instrument}_version.json"
 REMOTE_PATH = "/var/www/html/publications/"

@@ -77,7 +77,7 @@
     function change_instrument(instrument) {
       var instr = instruments.find(function(s) { return s.id == instrument });
       var instrument_path = instr.ncnrdata_id || instrument.toLowerCase();
-      $.getJSON('../csl_data/' + instrument + '.json', function(result) {
+      $.getJSON('../data/' + instrument + '.json', function(result) {
         var data = (result instanceof Array) ? result : Object.keys(result).map(function(k) { return result[k] });
     //.filter(function(v) { return v.id });
     if (mainTable == null) {
