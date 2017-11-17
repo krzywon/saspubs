@@ -1,18 +1,19 @@
 #!/usr/bin/env python
-
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 from citeproc.py2compat import *
 
 # We'll use json.loads for parsing the JSON data.
 import json
-import math
+import os
 
 # Import the citeproc-py classes we'll use below.
 from citeproc import CitationStylesStyle, CitationStylesBibliography
 from citeproc import Citation, CitationItem
 from citeproc import formatter
 from citeproc.source.json import CiteProcJSON
+
+from config import INSTRUMENTS, DB_PATH, DB_FILENAME_FMT
 
 try:
     from urllib.parse import unquote
@@ -45,7 +46,7 @@ def sortYear(items):
         yearLookup[year].append(key)
     return yearLookup
     
-def generateHTML(items, min_year=-math.inf, max_year=math.inf, group_by_year=True):
+def generateHTML(items, min_year=float('-inf'), max_year=float('inf'), group_by_year=True):
 
     bib_style = CitationStylesStyle('./NCNR_linktitle', validate=False)
 
@@ -112,9 +113,12 @@ TEMPLATE = """\
 """
 
 def makePage(instrument):
-    items = json.loads(open("{instrument}.json".format(instrument=instrument), "r").read()).items()
+    csl_db_filename = DB_FILENAME_FMT.format(instrument=instrument)
+    csl_db_path = os.path.join(DB_PATH, csl_db_filename)
+    items = json.loads(open(csl_db_path, "r").read()).items()
     content_pieces = generateHTML(items)
     content_pieces.reverse()
     content = "\n".join(content_pieces)
     output = TEMPLATE.format(instrument=instrument, content=content)
-    open("{instrument}_pubs.html".format(instrument=instrument), "w").write(output)
+    output_filename = "static/{instrument}_pubs.html".format(instrument=instrument)
+    open(output_filename, "w").write(output)
