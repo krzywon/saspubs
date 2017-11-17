@@ -19,7 +19,12 @@ try:
 except ImportError:
     from urllib import unquote
 
-from html import unescape
+try:
+    from html import unescape
+except ImportError:
+    import HTMLParser
+    parser = HTMLParser.HTMLParser()
+    unescape = parser.unescape
 
 # The following JSON data describes 5 references picked from the CSL test suite.
 
