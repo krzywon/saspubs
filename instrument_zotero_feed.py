@@ -66,7 +66,7 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
         # then nothing has changed.  we're done.
         return
         
-    new_version = max(list(to_update.values()))
+    new_version = max(list(to_update.values())) if number_to_update > 0 else old_version
     counter = 0
     step = 25 # can only get a limited number of items from zotero at once
     new_data = []
@@ -98,7 +98,8 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
                 db[key].update(crossref_data)
                 
     for key in deleted_data['items']:
-        del db[key]
+        if key in db:
+            del db[key]
         
     version_data["version"] = new_version
     open(version_path, "w").write(json.dumps(version_data, indent=2))
