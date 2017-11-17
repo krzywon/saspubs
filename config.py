@@ -15,6 +15,14 @@ INSTRUMENTS = {
     "BT7": {
         "group": "1942669",
         "collection": "VWZ2CZZJ"
+    },
+    "NGB30SANS": {
+        "group": "1942669",
+        "collection": "2TQMBS9X"
+    },
+    "NSE": {
+        "group": "1942669",
+        "collection": "XT6XYDEH"
     }
 }
 
