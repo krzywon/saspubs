@@ -4,6 +4,11 @@ import os
 import urllib
 import re
 
+try:
+    from urllib.parse import quote
+except ImportError:
+    from urllib import quote
+
 from config import INSTRUMENTS, crossref_keys_to_import, DB_PATH, DB_FILENAME_FMT, VERSION_FILENAME_FMT
 import JIF
 
@@ -99,7 +104,7 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     open(csl_db_file, "w").write(json.dumps(db))
     
 def csl_from_crossref(doi):
-    escaped_doi = urllib.parse.quote(doi)
+    escaped_doi = quote(doi)
     if DEBUG: print(doi, escaped_doi)
     transform = "application/vnd.citationstyles.csl+json"
     mailto = "mailto:brian.maranville@nist.gov"
