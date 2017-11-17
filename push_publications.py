@@ -1,27 +1,34 @@
-import paramiko
+import json
+import os
 
-DEST_HOST = "webster.ncnr.nist.gov"
-DEST_PORT = 22
-DEST_PKEY_FILE = '/home/bbm/.ssh/datapushkey'
-DEST_USERNAME = "bbm"
+from config import INSTRUMENTS, DB_PATH, DB_FILENAME_FMT, VERSION_FILENAME_FMT, REMOTE_PATH
 
-class SFTPConnection(object):
-    def __init__(self, dest_host=DEST_HOST, dest_port=DEST_PORT):
-        self.transport = paramiko.Transport((dest_host, dest_port))
-        self.sftp = None
+def push_instrument(instrument, server_connection):
+    db_filename = DB_FILENAME_FMT.format(db_path=DB_PATH, instrument=instrument)
+    version_path = VERSION_FILENAME_FMT.format(db_path=DB_PATH, instrument=instrument)
+    if not os.path.exists(db_filename):
+        # nothing to push
+        return
+    else:
+        if os.path.exists(version_path):
+            version_info = json.loads(open(version_path, 'r').read())
+        else:
+            version_info = {}
+        new_mtime = os.stat(db_filename).st_mtime
+        old_mtime = version_info.get("file_mtime", 0)
+        if new_mtime > old_mtime:
+            server_connection.sftp.put(db_filename, REMOTE_PATH + db_filename)
+            version_info["file_mtime"] = new_mtime
+            open(version_path, "w").write(json.dumps(version_info, 2))
+            
+if __name__=='__main__':
+    import sys
+    from server_sftp import SFTPConnection
+    server_connection = SFTPConnection()
+    server_connection.connect()
+    if len(sys.argv) > 1:
+        push_instrument(sys.argv[1])
         
-    def connect(self, username=DEST_USERNAME, pkey_file=DEST_PKEY_FILE, pkey_passphrase=None):
-        pkey = paramiko.RSAKey(filename=pkey_file, password=pkey_passphrase)
-        self.transport.connect(username=username, pkey=pkey)
-        self.transport.window_size = 2147483647
-        self.transport.use_compression(True)
-        self.sftp = paramiko.SFTPClient.from_transport(self.transport)
-        
-    def push_item(self, path, data, make_temporary=True):
-        dest_path = path if not make_temporary else path + ".tmp"
-        f = self.sftp.open(dest_path, 'w')
-        f.write(data)
-        f.close()
-        if make_temporary:
-            self.sftp.posix_rename(dest_path, path)
-
+    else: 
+        for instrument in INSTRUMENTS:
+            push_instrument(instrument)
