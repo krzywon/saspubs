@@ -49,3 +49,23 @@ def update_JIF_bytitle(values):
                     print(k, lookup[title][k])
                     v[k] = float(lookup[title][k])
                 
+def update_JIF_by_either(values):
+    issn_lookup = make_lookup()
+    title_lookup = make_lookup_bytitle()
+    for v in values:
+        found = False
+        if "ISSN" in v:
+            for issn in v["ISSN"]:
+                if issn in issn_lookup and not found:
+                    found = True
+                    for k in EXPORT_KEYS:
+                        v[k] = float(issn_lookup[issn][k])
+                        
+        if "container-title" in v and not found:
+            title = v["container-title"].upper()
+            if title in title_lookup:
+                found = True
+                for k in EXPORT_KEYS:
+                    print(k, title_lookup[title][k])
+                    v[k] = float(title_lookup[title][k])
+    

@@ -121,7 +121,7 @@ def process_instrument(instrument, include_JIF=True):
     version_data["version"] = new_version
     open(version_file, "w").write(json.dumps(version_data, indent=2))
     if include_JIF:
-        JIF.update_JIF_bytitle(db.values())
+        JIF.update_JIF_by_either(db.values())
     open(csl_db_file, "w").write(json.dumps(db))
     
 def csl_from_crossref(doi, filter_keys=False):
