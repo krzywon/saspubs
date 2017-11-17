@@ -11,6 +11,10 @@ INSTRUMENTS = {
     "NG7SANS": {
         "group": "1942669",
         "collection": "RV37EK44"
+    },
+    "BT7": {
+        "group": "1942669",
+        "collection": "VWZ2CZZJ"
     }
 }
 
