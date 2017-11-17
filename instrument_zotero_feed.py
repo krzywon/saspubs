@@ -84,22 +84,24 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
 
     #for key, item in zip(keys_to_update, new_data):
     for item in new_data:
-        key = item["id"].split("/")[-1] #id is "ASD1234" or "12987296/ASD1234"
-        data = item
-        db[key] = data
-        if 'DOI' in data and not data['DOI'] == "":
-            crossref_data = csl_from_crossref(data['DOI'])
+        extra = item.get("extra", "")
+        if 'DOI' in item and not item['DOI'] == "":
+            crossref_data = csl_from_crossref(item['DOI'])
             if crossref_data is not None: 
-                db[key].update(crossref_data)
-        elif DOI_IN_EXTRA.match(data.get("extra", "")):
-            DOI = DOI_IN_EXTRA.match(data.get("extra", "")).groups()[0]
+                item.update(crossref_data)
+        elif DOI_IN_EXTRA.match(extra):
+            DOI = DOI_IN_EXTRA.match(extra).groups()[0]
             crossref_data = csl_from_crossref(DOI)
             if crossref_data is not None: 
-                db[key].update(crossref_data)
-                
-    for key in deleted_data['items']:
-        if key in db:
-            del db[key]
+                item.update(crossref_data)
+    
+    for item in new_data:
+        key = item["id"].split("/")[-1] #id is "ASD1234" or "12987296/ASD1234"
+        db[key] = item.copy()
+        
+    for dkey in deleted_data['items']:
+        if dkey in db:
+            del db[dkey]
         
     version_data["version"] = new_version
     open(version_path, "w").write(json.dumps(version_data, indent=2))
@@ -118,7 +120,7 @@ def csl_from_crossref(doi):
         content = rj.json()
         return content
     except Exception as e:
-        print("not processing doi: %s because of error: %s" % (doi,str(e)))
+        if DEBUG: print("not processing doi: %s because of error: %s" % (doi,str(e)))
         return None
 
 if __name__=='__main__':
