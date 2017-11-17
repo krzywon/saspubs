@@ -86,12 +86,12 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
         db[key] = data
         if 'DOI' in data and not data['DOI'] == "":
             crossref_data = csl_from_crossref(data['DOI'])
-            if entry is not None: 
+            if crossref_data is not None: 
                 db[key].update(crossref_data)
         elif DOI_IN_EXTRA.match(data.get("extra", "")):
             DOI = DOI_IN_EXTRA.match(data.get("extra", "")).groups()[0]
             crossref_data = csl_from_crossref(DOI)
-            if entry is not None: 
+            if crossref_data is not None: 
                 db[key].update(crossref_data)
                 
     for key in deleted_data['items']:
