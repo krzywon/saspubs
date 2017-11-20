@@ -122,7 +122,7 @@
           { data: function(r) { return r['container-title-short'] || r['container-title'] || '--'}, title: 'journal'},
           { data: 'volume', title: 'volume', defaultContent: '--', className: "column-volume"},
           { data: function(r) { return r['page'] || r['article-number'] || '--'}, title: 'page', defaultContent: '--'},
-          { data: function(r) { return r['issued'] || r['date'] }, title: 'year', render:  renderYear},
+          { data: function(r) { return r['issued'] || r['date'] || "--" }, title: 'year', render:  renderYear},
           //{ "searchable": false, "orderable": false, "targets": 0, render: function() { return document.createElement('button') }}
           
         ]

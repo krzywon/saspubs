@@ -58,7 +58,7 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     group_endpoint = ZOTERO_API + "/" + group_path
 
     old_version = version_data.get("version", 0)
-    to_update = requests.get("%s/items?since=%d&format=versions" % (collection_endpoint, old_version)).json()
+    to_update = requests.get("%s/items?since=%d&format=versions&itemType=-attachment" % (collection_endpoint, old_version)).json()
     deleted_data = requests.get("%s/deleted?since=%d&format=json" % (group_endpoint, old_version)).json()
     keys_to_update = list(to_update.keys())
     number_to_update = len(keys_to_update)
