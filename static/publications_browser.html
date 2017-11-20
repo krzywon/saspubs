@@ -6,21 +6,19 @@
   <link rel="stylesheet" href="css/layout-default-latest.css" />
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-<!--
-  <link href="//code.jquery.com/ui/1.8.2/themes/start/jquery-ui.css"
-            type="text/css" rel="Stylesheet" />
--->
-  <link href="https://cdn.datatables.net/v/dt/dt-1.10.16/b-1.4.2/sl-1.2.3/datatables.min.css" type="text/css" rel="Stylesheet" />
+  
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.4.2/b-html5-1.4.2/b-print-1.4.2/sl-1.2.3/datatables.min.css"/>
+ 
   <script src="//code.jquery.com/jquery-1.12.4.js"></script> 
   <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<!--
-  <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.2/moment.min.js"></script>
--->
+  
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.4.2/b-html5-1.4.2/b-print-1.4.2/sl-1.2.3/datatables.min.js"></script>
+
   <script src="js/jquery.layout-latest.js"></script>
   <script src="js/geturlvars.js"></script>
   <script src="js/array-find-polyfill.js"></script>
-  <script src="https://cdn.datatables.net/v/dt/dt-1.10.16/b-1.4.2/sl-1.2.3/datatables.min.js" type="text/javascript"></script>
 
   <script type="text/javascript">
     var mainTable;
@@ -77,11 +75,13 @@
     function change_instrument(instrument) {
       var instr = instruments.find(function(s) { return s.id == instrument });
       var instrument_path = instr.ncnrdata_id || instrument.toLowerCase();
-      $.getJSON('data/' + instrument + '.json', function(result) {
+      $.getJSON('../data/' + instrument + '.json', function(result) {
         var data = (result instanceof Array) ? result : Object.keys(result).map(function(k) { return result[k] });
     //.filter(function(v) { return v.id });
     if (mainTable == null) {
       mainTable = $("table#experiments").dataTable({
+        dom: 'lfrBtip',
+        buttons: ['excel', 'csv', 'pdf' ],
         data: data,
         select: false,
         order: [[7, "desc"]],
@@ -111,9 +111,10 @@
         ],
         */
         columns: [
+          { data: 'DOI', title: 'DOI', visible: false, searchable: false, defaultContent: '--' },
           { data: 'title', title: 'title', render: renderTitle },
           { data: 'author', title: 'authors', render: renderAuthors },
-          { data: 'is-referenced-by-count', title: 'citations', defaultContent: '--' },
+          { data: 'is-referenced-by-count', title: 'citations', defaultContent: NaN },
           { data: 'Journal Impact Factor', title: 'JIF', render: renderJIF},
           { data: function(r) { return r['container-title-short'] || r['container-title'] || '--'}, title: 'journal'},
           { data: 'volume', title: 'volume', defaultContent: '--', className: "column-volume"},
@@ -373,6 +374,11 @@
     .column-volume {
       font-weight: bold;
     }
+    
+    a.dt-button, div.dt-button {
+      margin-right: 0;
+      padding: 0.25em 1em;
+    } 
   </style>
   <title>Publications</title>
 </head>
