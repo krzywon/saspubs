@@ -177,7 +177,7 @@
       <key macro="author"/>
       <key macro="title"/>
     </sort>
-    <layout prefix="&lt;li&gt;" suffix=".&lt;/li&gt;">
+    <layout prefix="&lt;li&gt;" suffix="&lt;/li&gt;">
 <!--
       <text variable="citation-number" vertical-align="sup"/>
 -->

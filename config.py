@@ -20,6 +20,10 @@ INSTRUMENTS = {
         "group": "1942669",
         "collection": "2TQMBS9X"
     },
+    "NGB10SANS": {
+        "group": "1942669",
+        "collection": "QTGN36EH"
+    },
     "NSE": {
         "group": "1942669",
         "collection": "XT6XYDEH"
