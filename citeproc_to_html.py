@@ -107,10 +107,12 @@ TEMPLATE = """\
         content {{
             display: flex;
             flex-direction: column;
+            align-items: center;
             width: 100%;
             /*height: 50px;*/
         }}
         div.centered-column {{
+            flex: 1;
             max-width: 900px;
             margin: auto;
         }}
