@@ -11,6 +11,7 @@ except ImportError:
 
 from config import INSTRUMENTS, crossref_keys_to_import, DB_PATH, DB_FILENAME_FMT, VERSION_FILENAME_FMT
 import JIF
+from citeproc_to_html import makePage
 
 DEBUG = True
 
@@ -108,6 +109,7 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     if include_JIF:
         JIF.update_JIF_by_either(db.values())
     open(csl_db_path, "w").write(json.dumps(db))
+    makePage(instrument)
     
 def csl_from_crossref(doi):
     escaped_doi = quote(doi)

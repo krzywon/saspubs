@@ -7,6 +7,7 @@ from config import INSTRUMENTS, DB_PATH, DB_FILENAME_FMT, VERSION_FILENAME_FMT, 
 def push_instrument(instrument):
     db_filename = DB_FILENAME_FMT.format(instrument=instrument)
     db_fullpath = os.path.join(DB_PATH, db_filename)
+    html_page_path = os.path.join("static", instrument + "_pubs.html")
     version_filename = VERSION_FILENAME_FMT.format(db_path=DB_PATH, instrument=instrument)
     version_fullpath = os.path.join(DB_PATH, version_filename)
     if not os.path.exists(db_fullpath):
@@ -23,6 +24,8 @@ def push_instrument(instrument):
             server_connection = SFTPConnection()
             server_connection.connect()
             server_connection.sftp.put(db_fullpath, REMOTE_PATH + 'data/' + db_filename)
+            if os.path.exists(html_page_path):
+                server_connection.sftp.put(html_page_path, REMOTE_PATH + instrument + "_pubs.html")
             version_info["file_mtime"] = new_mtime
             open(version_fullpath, "w").write(json.dumps(version_info, 2))
             
