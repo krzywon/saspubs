@@ -142,7 +142,19 @@
     }
     
     function renderTitle(d, type, row) {
-      return "<a href=\"https://dx.doi.org/" + (row.DOI || row.doi || row.URL) + "\">" + d + "</a>";
+      var url = null;
+      if (row.DOI || row.doi) {
+        url = "https://dx.doi.org/" + (row.DOI || row.doi);
+      }
+      else if (row.URL) {
+        url = row.URL;
+      }
+      if (url != null) {
+        return "<a href=\"" + url + "\">" + d + "</a>";
+      }
+      else {
+        return d
+      }
     }
     
     function getTimestring(d) {
