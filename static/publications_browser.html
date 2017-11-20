@@ -75,7 +75,7 @@
     function change_instrument(instrument) {
       var instr = instruments.find(function(s) { return s.id == instrument });
       var instrument_path = instr.ncnrdata_id || instrument.toLowerCase();
-      $.getJSON('../data/' + instrument + '.json', function(result) {
+      $.getJSON('data/' + instrument + '.json', function(result) {
         var data = (result instanceof Array) ? result : Object.keys(result).map(function(k) { return result[k] });
     //.filter(function(v) { return v.id });
     if (mainTable == null) {
@@ -375,6 +375,14 @@
       font-weight: bold;
     }
     
+    div.dt-buttons {
+      margin-left: 1em;
+    }
+    div.dt-buttons:before {
+      content: 'export to:';
+      white-space: pre;
+      vertical-align: top;
+    }
     a.dt-button, div.dt-button {
       margin-right: 0;
       padding: 0.25em 1em;
