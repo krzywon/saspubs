@@ -63,7 +63,14 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     keys_to_update = list(to_update.keys())
     number_to_update = len(keys_to_update)
     number_to_delete = len(deleted_data.get("items", []))
-    if number_to_update == 0 and number_to_delete == 0:
+    if DEBUG: print("to delete:", deleted_data)
+    number_actually_deleted = 0
+    for dkey in deleted_data['items']:
+        if dkey in db:
+            del db[dkey]
+            number_actually_deleted += 1
+
+    if number_to_update == 0 and number_actually_deleted == 0:
         # then nothing has changed.  we're done.
         return
         
@@ -80,8 +87,6 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
         if DEBUG: print(partial_data["items"])
         counter += step
     if DEBUG: print("new data:", len(new_data), [item['id'] for item in new_data])
-    deleted_data = requests.get("%s/deleted?since=%d&format=json" % (group_endpoint, old_version)).json()
-    if DEBUG: print("to delete:", deleted_data)
 
     #for key, item in zip(keys_to_update, new_data):
     for item in new_data:
@@ -99,10 +104,6 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     for item in new_data:
         key = item["id"].split("/")[-1] #id is "ASD1234" or "12987296/ASD1234"
         db[key] = item.copy()
-        
-    for dkey in deleted_data['items']:
-        if dkey in db:
-            del db[dkey]
         
     version_data["version"] = new_version
     open(version_path, "w").write(json.dumps(version_data, indent=2))
