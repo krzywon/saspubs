@@ -8,6 +8,10 @@ INSTRUMENTS = {
         "group": "1942136",
         #"collection": "5FB99F7A"
     },
+    "NG7REFL": {
+        "group": "1942669",
+        "collection": "TKAGDRTW"
+    },
     "NG7SANS": {
         "group": "1942669",
         "collection": "RV37EK44"
