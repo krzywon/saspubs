@@ -62,7 +62,7 @@ def update_JIF_by_either(values):
                     for k in EXPORT_KEYS:
                         v[k] = float(issn_lookup[issn][k])
                         
-        if "container-title" in v and not found:
+        if "container-title" in v and v["container-title"] and not found:
             title = v["container-title"].upper()
             if title in title_lookup:
                 found = True

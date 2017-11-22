@@ -27,10 +27,10 @@ crossref_json_headers = {
     "User-Agent": "NCNR Publications Manager (https://ncnr.nist.gov/publications/publications_browser.html; mailto:brian.maranville@nist.gov)"
 }
 
-zotero_to_crossref = {
-    "date": ["issued", "raw"]
-}
-
+RETRIEVE_FROM_CROSSREF = [
+    "is-referenced-by-count",
+    "container-title-short"
+]
 
 
 def process_zotero(instrument, include_JIF=True, filter_keys=True):
@@ -84,17 +84,7 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     if DEBUG: print("new data:", len(new_data), [item['id'] for item in new_data])
 
     #for key, item in zip(keys_to_update, new_data):
-    for item in new_data:
-        extra = item.get("extra", "")
-        if 'DOI' in item and not item['DOI'] == "":
-            crossref_data = csl_from_crossref(item['DOI'])
-            if crossref_data is not None: 
-                item.update(crossref_data)
-        elif DOI_IN_EXTRA.match(extra):
-            DOI = DOI_IN_EXTRA.match(extra).groups()[0]
-            crossref_data = csl_from_crossref(DOI)
-            if crossref_data is not None: 
-                item.update(crossref_data)
+    add_from_crossref(new_data, keys_to_update=RETRIEVE_FROM_CROSSREF)
     
     for item in new_data:
         key = item["id"].split("/")[-1] #id is "ASD1234" or "12987296/ASD1234"
@@ -115,11 +105,12 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     version_data["version"] = items_version 
     # if deletions_version is newer, that's ok... 
     # (re-attempting a deletion for a stale version doesn't hurt)
-    open(version_path, "w").write(json.dumps(version_data, indent=2))
     if include_JIF:
         JIF.update_JIF_by_either(db.values())
     open(csl_db_path, "w").write(json.dumps(db))
+    open(version_path, "w").write(json.dumps(version_data, indent=2))
     makePage(instrument)
+
     
 def csl_from_crossref(doi):
     escaped_doi = quote(doi)
@@ -135,6 +126,23 @@ def csl_from_crossref(doi):
         if DEBUG: print("not processing doi: %s because of error: %s" % (doi,str(e)))
         return None
 
+def add_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, overwrite=False):
+    for item in values:
+        DOI = None
+        extra = item.get("extra", "")
+        if 'DOI' in item and not item['DOI'] == "":
+            DOI = item["DOI"]
+        elif DOI_IN_EXTRA.match(extra):
+            DOI = DOI_IN_EXTRA.match(extra).groups()[0]
+        
+        if DOI is not None:
+            crossref_data = csl_from_crossref(item['DOI'])
+            if crossref_data is not None:
+                for key in keys_to_update:
+                    if key in crossref_data:
+                        if overwrite or not key in item:
+                            item[key] = crossref_data[key]
+        
 if __name__=='__main__':
     import sys
     if len(sys.argv) > 1:
