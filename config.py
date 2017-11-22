@@ -39,6 +39,10 @@ INSTRUMENTS = {
     "DCS": {
         "group": "1942669",
         "collection": "5NKTCIUL"
+    },
+    "MACS": {
+        "group": "1942669",
+        "collection": "SCPXUF5T"
     }
 }
 
