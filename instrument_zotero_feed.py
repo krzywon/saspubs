@@ -58,23 +58,18 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     group_endpoint = ZOTERO_API + "/" + group_path
 
     old_version = version_data.get("version", 0)
-    to_update = requests.get("%s/items?since=%d&format=versions&itemType=-attachment" % (collection_endpoint, old_version)).json()
-    deleted_data = requests.get("%s/deleted?since=%d&format=json" % (group_endpoint, old_version)).json()
-    keys_to_update = list(to_update.keys())
-    number_to_update = len(keys_to_update)
-    number_to_delete = len(deleted_data.get("items", []))
-    if DEBUG: print("to delete:", deleted_data)
-    number_actually_deleted = 0
-    for dkey in deleted_data['items']:
-        if dkey in db:
-            del db[dkey]
-            number_actually_deleted += 1
-
-    if number_to_update == 0 and number_actually_deleted == 0:
-        # then nothing has changed.  we're done.
+    versions_rq = requests.get("%s/items?since=%d&format=versions&itemType=-attachment" % (collection_endpoint, old_version))
+    items_version = int(versions_rq.headers["Last-Modified-Version"])
+    if not items_version > old_version:
+        # no changes... we're done
         return
         
-    new_version = max(list(to_update.values())) if number_to_update > 0 else old_version
+    to_update = versions_rq.json()
+    
+    keys_to_update = list(to_update.keys())
+    number_to_update = len(keys_to_update)
+    
+    new_version = items_version
     counter = 0
     step = 25 # can only get a limited number of items from zotero at once
     new_data = []
@@ -104,8 +99,22 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     for item in new_data:
         key = item["id"].split("/")[-1] #id is "ASD1234" or "12987296/ASD1234"
         db[key] = item.copy()
-        
-    version_data["version"] = new_version
+    
+    deleted_rq = requests.get("%s/deleted?since=%d&format=json" % (group_endpoint, old_version))
+    deletions_version =  int(deleted_rq.headers["Last-Modified-Version"])
+    deleted_data = deleted_rq.json()
+    number_to_delete = len(deleted_data.get("items", []))
+    if DEBUG: print("to delete:", deleted_data)
+    number_actually_deleted = 0
+    for dkey in deleted_data['items']:
+        if dkey in db:
+            if DEBUG: print("deleting key:", dkey)
+            del db[dkey]
+            number_actually_deleted += 1
+            
+    version_data["version"] = items_version 
+    # if deletions_version is newer, that's ok... 
+    # (re-attempting a deletion for a stale version doesn't hurt)
     open(version_path, "w").write(json.dumps(version_data, indent=2))
     if include_JIF:
         JIF.update_JIF_by_either(db.values())
