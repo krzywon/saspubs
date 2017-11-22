@@ -35,6 +35,10 @@ INSTRUMENTS = {
     "USANS": {
         "group": "1942669",
         "collection": "64AMFBBD"
+    },
+    "DCS": {
+        "group": "1942669",
+        "collection": "5NKTCIUL"
     }
 }
 
