@@ -29,7 +29,8 @@ crossref_json_headers = {
 
 RETRIEVE_FROM_CROSSREF = [
     "is-referenced-by-count",
-    "container-title-short"
+    "container-title-short",
+    "article-number"
 ]
 
 
