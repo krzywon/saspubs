@@ -118,7 +118,7 @@ def csl_from_crossref(doi):
     escaped_doi = quote(doi)
     if DEBUG: print(doi, escaped_doi)
     transform = "application/vnd.citationstyles.csl+json"
-    mailto = "mailto:brian.maranville@nist.gov"
+    mailto = "mailto=brian.maranville@nist.gov"
     request_url = "https://api.crossref.org/works/{doi}/transform/{transform}?{mailto}".format(doi=escaped_doi, transform=transform, mailto=mailto)
     rj = requests.get(request_url)
     try: 
