@@ -60,7 +60,10 @@ def update_JIF_by_either(values):
                 if issn in issn_lookup and not found:
                     found = True
                     for k in EXPORT_KEYS:
-                        v[k] = float(issn_lookup[issn][k])
+                        try:
+                            v[k] = float(issn_lookup[issn][k])
+                        except Exception:
+                            pass
                         
         if "container-title" in v and v["container-title"] and not found:
             title = v["container-title"].upper()
@@ -68,5 +71,8 @@ def update_JIF_by_either(values):
                 found = True
                 for k in EXPORT_KEYS:
                     if DEBUG: print(k, title_lookup[title][k])
-                    v[k] = float(title_lookup[title][k])
+                    try:
+                        v[k] = float(title_lookup[title][k])
+                    except Exception:
+                        pass
     
