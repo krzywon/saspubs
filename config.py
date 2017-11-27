@@ -43,6 +43,14 @@ INSTRUMENTS = {
     "MACS": {
         "group": "1942669",
         "collection": "SCPXUF5T"
+    },
+    "TEST": {
+        "group": "1925268",
+        "collection": "YQIVUSAD"
+    },
+    "TEST2": {
+        "group": "1925268",
+        "collection": "FAHFDH4G"
     }
 }
 

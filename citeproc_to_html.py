@@ -63,6 +63,7 @@ def generateHTML(items, min_year=float('-inf'), max_year=float('inf'), group_by_
     
     #bib_source = CiteProcJSON([v for k,v in items])
     yearLookup = sortYear(items)
+    print(yearLookup)
     years = list(yearLookup.keys())
     years.sort()
     output_years = [year for year in years if year <= max_year and year >=min_year]
