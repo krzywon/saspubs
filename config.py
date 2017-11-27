@@ -44,6 +44,10 @@ INSTRUMENTS = {
         "group": "1942669",
         "collection": "SCPXUF5T"
     },
+    "HFBS": {
+        "group": "1942669",
+        "collection": "9GDX95BA"
+    },
     "TEST": {
         "group": "1925268",
         "collection": "YQIVUSAD"
