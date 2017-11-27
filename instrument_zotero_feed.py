@@ -59,7 +59,7 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     group_endpoint = ZOTERO_API + "/" + group_path
 
     old_version = version_data.get("version", 0)
-    versions_rq = requests.get("%s/items?since=%d&format=versions&itemType=-attachment%20||%20note" % (collection_endpoint, old_version))
+    versions_rq = requests.get("{collection}/items?since={old_version:d}&format=versions&itemType=-attachment%20||%20note".format(collection=collection_endpoint, old_version=old_version))
     items_version = int(versions_rq.headers["Last-Modified-Version"])
     if not items_version > old_version:
         # no changes... we're done
