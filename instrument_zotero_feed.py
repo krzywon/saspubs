@@ -30,7 +30,8 @@ crossref_json_headers = {
 RETRIEVE_FROM_CROSSREF = [
     "is-referenced-by-count",
     "container-title-short",
-    "article-number"
+    "article-number",
+    "issued"
 ]
 
 
@@ -85,7 +86,7 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     if DEBUG: print("new data:", len(new_data), [item['id'] for item in new_data])
 
     #for key, item in zip(keys_to_update, new_data):
-    add_from_crossref(new_data, keys_to_update=RETRIEVE_FROM_CROSSREF)
+    all_from_crossref(new_data)
     
     for item in new_data:
         key = item["id"].split("/")[-1] #id is "ASD1234" or "12987296/ASD1234"
@@ -125,25 +126,41 @@ def csl_from_crossref(doi):
         return content
     except Exception as e:
         if DEBUG: print("not processing doi: %s because of error: %s" % (doi,str(e)))
-        return None
+        return {}
 
-def add_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, overwrite=False):
+def extract_DOI(item):
+    DOI = None
+    extra = item.get("extra", "")
+    if 'DOI' in item and not item['DOI'] == "":
+        DOI = item["DOI"]
+    elif DOI_IN_EXTRA.match(extra):
+        DOI = DOI_IN_EXTRA.match(extra).groups()[0]
+    return DOI
+
+def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, overwrite=False):
     for item in values:
-        DOI = None
-        extra = item.get("extra", "")
-        if 'DOI' in item and not item['DOI'] == "":
-            DOI = item["DOI"]
-        elif DOI_IN_EXTRA.match(extra):
-            DOI = DOI_IN_EXTRA.match(extra).groups()[0]
-        
+        DOI = extract_DOI(item)
         if DOI is not None:
             crossref_data = csl_from_crossref(item['DOI'])
-            if crossref_data is not None:
-                for key in keys_to_update:
-                    if key in crossref_data:
-                        if overwrite or not key in item:
-                            item[key] = crossref_data[key]
-        
+            for key in keys_to_update:
+                if key in crossref_data:
+                    if overwrite or not key in item:
+                        item[key] = crossref_data[key]
+
+def all_from_crossref(values):
+    for item in values:
+        DOI = extract_DOI(item)
+        if DOI is not None:
+            crossref_data = csl_from_crossref(item['DOI'])
+            item.update(crossref_data)
+
+def patch_db_from_crossref(instrument, keys_to_patch):
+    csl_db_filename = DB_FILENAME_FMT.format(instrument=instrument)
+    csl_db_path = os.path.join(DB_PATH, csl_db_filename)
+    db = json.loads(open(csl_db_path, 'r').read())
+    append_from_crossref(db.values(), keys_to_update=keys_to_patch, overwrite=True)
+    open(csl_db_path, "w").write(json.dumps(db))
+    
 if __name__=='__main__':
     import sys
     if len(sys.argv) > 1:
