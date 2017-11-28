@@ -90,12 +90,14 @@ TEMPLATE = """\
 <head>
     <meta charset="UTF-8">
     <title>{instrument} Publications</title>
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
     <link rel="stylesheet" href="css/drupal_header.css" />
     <style>
         body {{
             font-family: Arial, Helvetica, sans-serif;
         }}
         header.title {{
+            font-family: 'Source Sans Pro', sans-serif;
             text-align: center;
         }}
         ol.publications li {{
@@ -129,7 +131,7 @@ TEMPLATE = """\
     <header class="top">
         <div class="section-header">
             <div class="section-header__main">
-                <h2 class="section-header__title"><a href="https://www.nist.gov/ncnr">NIST Center for Neutron Research</a></h2>
+                <h1 class="section-header__title"><a href="https://www.nist.gov/ncnr">NIST Center for Neutron Research</a></h1>
             </div>
         </div>    
     </header>
