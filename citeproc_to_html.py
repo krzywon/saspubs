@@ -6,6 +6,7 @@ from citeproc.py2compat import *
 # We'll use json.loads for parsing the JSON data.
 import json
 import os
+import re
 
 # Import the citeproc-py classes we'll use below.
 from citeproc import CitationStylesStyle, CitationStylesBibliography
@@ -29,6 +30,11 @@ except ImportError:
 
 # The following JSON data describes 5 references picked from the CSL test suite.
 
+MONTHDAY_FIRST_SLASH = re.compile(r'^(\d{1,2}/)+\d{4}$')
+YEAR_FIRST_SLASH = re.compile(r'^\d{4}(/\d{1,2})+$')
+ISO_STYLE_DATE = re.compile(r'^\d{4}(-\d{1,2}){0,1,2}$')
+JUST_YEAR = re.compile(r'\d{4}')
+
 def getYear(item):
     issued = item.get("issued", {})
     if 'date-parts' in issued:
@@ -38,6 +44,31 @@ def getYear(item):
         ts = '-'.join(ts.split('/')[::-1])
         return int(ts.split('-')[0])
         
+def getDateString(item):
+    issued = item.get("issued", {})
+    if 'date-parts' in issued:
+        ta = issued['date-parts'][0]
+        #return "-".join(map(lambda d: format(d, '02d'), issued['date-parts'][0]))
+    elif 'raw' in issued:
+        ts = issued['raw']
+        # convert slash dates to ISO format YYYY-MM-DD
+        if MONTHDAY_FIRST_SLASH.match(ts):
+            ta = ts.split('/')[::-1]
+        elif YEAR_FIRST_SLASH.match(ts):
+            ta = ts.split('/')
+        elif ISO_STYLE_DATE.match(ts):
+            ta = ts.split('-')
+        else:
+            #something else... just get the year.
+            ta = JUST_YEAR.findall(ts)
+        ta = list(map(int, ta))
+    
+    date_array = [1970,1,1]
+    for i, ti in enumerate(ta):
+        if i<3:
+            date_array[i] = ti
+    return "-".join(map(lambda d: format(d, '02d'), date_array))
+        
 def sortYear(items):
     yearLookup = {}
     for key, value in items:
@@ -46,9 +77,10 @@ def sortYear(items):
         yearLookup[year].append(key)
     return yearLookup
     
-def generateHTML(items, min_year=float('-inf'), max_year=float('inf'), group_by_year=True):
+def generateHTML(db, min_year=float('-inf'), max_year=float('inf'), group_by_year=True):
 
     bib_style = CitationStylesStyle('./NCNR_linktitle', validate=False)
+    #bib_style = CitationStylesStyle('harvard1', validate=False)
 
     # Create the citeproc-py bibliography, passing it the:
     # * CitationStylesStyle,
@@ -58,12 +90,13 @@ def generateHTML(items, min_year=float('-inf'), max_year=float('inf'), group_by_
     #bibliography = CitationStylesBibliography(bib_style, bib_source, formatter.html)
     
     # add id to each item:
+    items = db.items()
     for k,v in items:
         v['id'] = k
     
-    #bib_source = CiteProcJSON([v for k,v in items])
+    bib_source = CiteProcJSON([v for k,v in items])
     yearLookup = sortYear(items)
-    print(yearLookup)
+    #print(yearLookup)
     years = list(yearLookup.keys())
     years.sort()
     output_years = [year for year in years if year <= max_year and year >=min_year]
@@ -72,10 +105,13 @@ def generateHTML(items, min_year=float('-inf'), max_year=float('inf'), group_by_
     for year in output_years:
         year_link_items.append('<a href="#year_%d">%d</a>' % (year,year))
         keys = yearLookup[year]
-        bib_source = CiteProcJSON([v for k,v in items if k in keys])
+        keys.sort(key=lambda k: getDateString(db[k]), reverse=True)
+        #bib_source = CiteProcJSON([v for k,v in items if k in keys])
         bibliography = CitationStylesBibliography(bib_style, bib_source, formatter.html)
-        for k in keys:
-            bibliography.register(Citation([CitationItem(k)]))
+        citations = [Citation([CitationItem(k)]) for k in keys]
+        for c in citations:
+            bibliography.register(c)
+        
         bib = bibliography.bibliography()
         bib_output = [unescape("\n".join(b)) for b in bib]
         year_output = ['<div class="year-heading" id="year_%d"><h2>%d</h2><a href="#year_navigation">top</a></div>\n<hr>' % (year, year)]
@@ -84,7 +120,10 @@ def generateHTML(items, min_year=float('-inf'), max_year=float('inf'), group_by_
         year_output.append('</ol>')
         year_cite_items.append("\n".join(year_output))
     return {"citations": year_cite_items, "links": year_link_items}
-        
+
+def callback(t):
+    pass
+
 TEMPLATE = """\
 <html>
 <head>
@@ -151,8 +190,8 @@ TEMPLATE = """\
 def makePage(instrument):
     csl_db_filename = DB_FILENAME_FMT.format(instrument=instrument)
     csl_db_path = os.path.join(DB_PATH, csl_db_filename)
-    items = json.loads(open(csl_db_path, "r").read()).items()
-    content_pieces = generateHTML(items)
+    db = json.loads(open(csl_db_path, "r").read())
+    content_pieces = generateHTML(db)
     citations = content_pieces["citations"]
     year_links = content_pieces["links"]
     citations.reverse()
