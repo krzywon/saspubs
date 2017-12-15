@@ -128,7 +128,7 @@ TEMPLATE = """\
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{instrument} Publications</title>
+    <title>{title} Publications</title>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
     <link rel="stylesheet" href="css/drupal_header.css" />
     <style>
