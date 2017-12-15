@@ -18,7 +18,8 @@ INSTRUMENTS = {
     },
     "BT7": {
         "group": "1942669",
-        "collection": "VWZ2CZZJ"
+        "collection": "VWZ2CZZJ",
+        "title": "Thermal Triple Axis"
     },
     "NGB30SANS": {
         "group": "1942669",

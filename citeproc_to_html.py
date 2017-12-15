@@ -174,7 +174,7 @@ TEMPLATE = """\
             </div>
         </div>    
     </header>
-    <header class="title"><h1>{instrument} instrument publications</h1></header>
+    <header class="title"><h1>{title} Publications</h1></header>
     <content>
         <div class="centered-column" id="year_navigation">
         {yearlinks}
@@ -197,6 +197,7 @@ def makePage(instrument):
     citations.reverse()
     year_links.reverse()
     content = "\n".join(citations)
-    output = TEMPLATE.format(instrument=instrument, content=content, yearlinks=", ".join(year_links))
+    title = INSTRUMENTS[instrument].get("title", "{instrument} Instrument".format(instrument=instrument))
+    output = TEMPLATE.format(title=title, content=content, yearlinks=", ".join(year_links))
     output_filename = "static/{instrument}_pubs.html".format(instrument=instrument)
     open(output_filename, "w").write(output)
