@@ -21,6 +21,10 @@ INSTRUMENTS = {
         "collection": "VWZ2CZZJ",
         "title": "Thermal Triple Axis"
     },
+    "SPINS": {
+        "group": "1942669",
+        "collection": "ICQ7KQ23"
+    },
     "NGB30SANS": {
         "group": "1942669",
         "collection": "2TQMBS9X"
