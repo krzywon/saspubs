@@ -184,6 +184,7 @@
       }
       else if (d["date-parts"]) {
         var t = d["date-parts"][0];
+        t = (t || []).map(function(p) { let ps=p.toFixed(); return (ps.length == 1) ? "0" + ps : ps });
         ts = t.join("-");
       }
       else if (d["raw"]) {
