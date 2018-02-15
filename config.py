@@ -99,7 +99,9 @@ INSTRUMENTS = {
     },
     "SANS": {
         "group": "1942669",
-        "collection": "BS3GD4WM"
+        "collection": "BS3GD4WM",
+        "header": SANS_HEADER,
+        "footer": SANS_FOOTER
     },
     "USANS": {
         "group": "1942669",
