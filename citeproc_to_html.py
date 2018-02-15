@@ -176,12 +176,18 @@ TEMPLATE = """\
     </header>
     <header class="title"><h1>{title} Publications</h1></header>
     <content>
+        <div class="centered-column" id="preamble">
+        {preamble}
+        </div>
         <div class="centered-column" id="year_navigation">
         {yearlinks}
         </div>
         <div class="centered-column">
         {content}
         </div>
+        <div class="centered-column" id="postscript">
+        {postscript}
+        <div>
     </content>
 </body>
 </html>
@@ -197,7 +203,9 @@ def makePage(instrument):
     citations.reverse()
     year_links.reverse()
     content = "\n".join(citations)
+    preamble = INSTRUMENTS[instrument].get('header', '')
+    postscript = INSTRUMENTS[instrument].get('footer', '')
     title = INSTRUMENTS[instrument].get("title", "{instrument} Instrument".format(instrument=instrument))
-    output = TEMPLATE.format(title=title, content=content, yearlinks=", ".join(year_links))
+    output = TEMPLATE.format(title=title, content=content, yearlinks=", ".join(year_links), preamble=preamble, postscript=postscript)
     output_filename = "static/{instrument}_pubs.html".format(instrument=instrument)
     open(output_filename, "w").write(output)
