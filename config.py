@@ -1,3 +1,9 @@
+SANS_HEADER = r"""\
+"""
+
+SANS_FOOTER = r"""\
+"""
+
 INSTRUMENTS = {
     
     "MAGIK": {
@@ -14,7 +20,9 @@ INSTRUMENTS = {
     },
     "NG7SANS": {
         "group": "1942669",
-        "collection": "RV37EK44"
+        "collection": "RV37EK44", 
+        "header": SANS_HEADER,
+        "footer": SANS_FOOTER
     },
     "BT7": {
         "group": "1942669",
