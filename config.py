@@ -48,6 +48,27 @@ SANS_HEADER = (SANS_HEADER_START + r"""
 SANS_FOOTER = r"""\
 """
 
+MACS_HEADER = r"""\
+<h2>Acknowledgement Information</h2>
+
+<p>If you write a paper that reports measurements using the MACS, please be sure to include this acknowledgement to the NSF, and to NIST</p>
+
+<p><em>"Access to MACS was provided by the Center for High Resolution Neutron Scattering, a partnership between the National Institute of Standards and Technology and the National Science Foundation under Agreement No. DMR-1508249."</em></p>
+
+<p>Please also include a reference to the following paper describing the MACS</p>
+
+<p><em>"MACS-a new high intensity cold neutron spectrometer at NIST" by J. A. Rodriguez, D. M. Adler, P. C. Brand, C. Broholm, J. C. Cook, C. Brocker, R. Hammond, Z. Huang, P. Hundertmark, J. W. Lynn, N. C. Maliszewskyj, J. Moyer, J. Orndorff, D. Pierce, T. D. Pike, G. Scharfstein, S. A. Smee and R. Vilaseca, 
+<a href="http://iopscience.iop.org/0957-0233/19/3/034023">Meas. Sci. Technol. 19 034023 (2008)</a></em></p>
+
+<p>In addition, the following (or similar) acknowledgement is expected to appear in all publications of work done at the NCNR that do not explicitly have a coauthor from the NCNR.</p>
+
+<p><em>We acknowledge the support of the National Institute of Standards and Technology, U.S. Department of Commerce, in providing the neutron research facilities used in this work.</em></p>
+
+<p>Please be aware that all papers with NIST coauthors must be reviewed and approved by the Washington Editorial Review Board (WERB). Members of WERB are concerned not only with scientific merit but with three specific matters: measurement uncertainties, the use of SI units, and brand names. For more detailed information please click here, and/or speak with your NIST coauthor(s).</p>
+<h3><a href="https://scholar.google.com/citations?hl=en&user=LUG29CwAAAAJ&view_op=list_works&authuser=1">MACS Publications statistics</a></h3>
+"""
+MACS_FOOTER = ""
+
 INSTRUMENTS = {
     
     "MAGIK": {
@@ -109,7 +130,9 @@ INSTRUMENTS = {
     },
     "MACS": {
         "group": "1942669",
-        "collection": "SCPXUF5T"
+        "collection": "SCPXUF5T",
+        "header": MACS_HEADER,
+        "footer": MACS_FOOTER
     },
     "HFBS": {
         "group": "1942669",
