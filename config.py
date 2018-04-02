@@ -69,6 +69,42 @@ MACS_HEADER = r"""
 """
 MACS_FOOTER = ""
 
+HFBS_HEADER = r"""
+<h2>Acknowledgment information</h2>
+<p>If you have written a paper that includes data taken on the HFBS and you do not see it in the list below, or if the information in our list is incorrect, please contact Madhusudan Tyagi with the correct information.</p>
+
+<p>If you write a paper that reports measurements using the HFBS, please be sure to:
+  <ol type="a">
+    <li>include an acknowledgment to the NSF, and to NIST if there are no NIST co-authors, and </li>
+    <li>include a reference to the following paper:</li>
+  </ol>
+
+<span class="title"><a href="https://doi.org/10.1063/1.1568557">
+The high-flux backscattering spectrometer at the NIST Center for Neutron Research
+</a></span>
+<span class="author">
+Meyer, A., Dimeo, R.M., Gehring, P.M., and Neumann, D.A.
+</span>
+, 
+<span class="journal">Review of Scientific Instruments</span> 
+<span class="volume"><b>74</b></span>, 2759–2777 (2003)
+</p>
+
+<p>If you used the DAVE software package to treat your data, please include an appropriate reference:</p>
+<span class="title"><a href="http://nvl.nist.gov/pub/nistpubs/jres/114/6/V114.N06.A04.pdf">
+DAVE: A comprehensive software suite for the reduction, visualization, and analysis of low energy neutron spectroscopic data
+</a></span>
+<span class="author">
+R.T. Azuah, L.R. Kneller, Y. Qiu, P.L.W. Tregenna-Piggott, C.M. Brown, J.R.D. Copley, and R.M. Dimeo,
+</span>
+<span class="journal">J. Res. Natl. Inst. Stan. Technol.</span>
+<span class="volume"><b>114</b></span>, 341-358 (2009).
+</p>
+<p>Please be aware that all papers with NIST co-authors must be reviewed and approved by the Washington Editorial Review Board (WERB). Members of WERB are concerned not only with scientific merit but with three specific matters: measurement uncertainties,	the use of SI units, and brand names. For more detailed information please click here and/or speak with your NIST co-author(s).</p>
+
+"""
+HFBS_FOOTER = ""
+
 INSTRUMENTS = {
     
     "MAGIK": {
@@ -136,7 +172,9 @@ INSTRUMENTS = {
     },
     "HFBS": {
         "group": "1942669",
-        "collection": "9GDX95BA"
+        "collection": "9GDX95BA",
+        "header": HFBS_HEADER,
+        "footer": HFBS_FOOTER
     },
     "TEST": {
         "group": "1925268",
