@@ -106,9 +106,10 @@ R.T. Azuah, L.R. Kneller, Y. Qiu, P.L.W. Tregenna-Piggott, C.M. Brown, J.R.D. Co
 HFBS_FOOTER = ""
 
 NSE_HEADER = """
-If you have written a paper that reports measurements using NSE and you do not see it in the list below, 
+<p>If you have written a paper that reports measurements using NSE and you do not see it in the list below, 
 or if the paper is listed but the information is incorrect or out of date, please inform 
 <a href="mailto:afaraone@nist.gov">Antonio Faraone</a>.
+</p>
 """
 NSE_FOOTER = ""
 
