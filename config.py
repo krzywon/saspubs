@@ -105,6 +105,13 @@ R.T. Azuah, L.R. Kneller, Y. Qiu, P.L.W. Tregenna-Piggott, C.M. Brown, J.R.D. Co
 """
 HFBS_FOOTER = ""
 
+NSE_HEADER = """
+If you have written a paper that reports measurements using NSE and you do not see it in the list below, 
+or if the paper is listed but the information is incorrect or out of date, please inform 
+<a href="mailto:afaraone@nist.gov">Antonio Faraone</a>.
+"""
+NSE_FOOTER = ""
+
 INSTRUMENTS = {
     
     "MAGIK": {
@@ -146,7 +153,9 @@ INSTRUMENTS = {
     },
     "NSE": {
         "group": "1942669",
-        "collection": "XT6XYDEH"
+        "collection": "XT6XYDEH",
+        "header": NSE_HEADER,
+        "footer": NSE_FOOTER
     },
     "SANS": {
         "group": "1942669",
