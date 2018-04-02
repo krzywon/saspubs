@@ -86,8 +86,8 @@ The high-flux backscattering spectrometer at the NIST Center for Neutron Researc
 Meyer, A., Dimeo, R.M., Gehring, P.M., and Neumann, D.A.
 </span>
 , 
-<span class="journal">Review of Scientific Instruments</span> 
-<span class="volume"><b>74</b></span>, 2759–2777 (2003)
+<span class="journal">Review of Scientific Instruments</span>
+<span class="volume"><b>74</b></span>, 2759-2777 (2003)
 </p>
 
 <p>If you used the DAVE software package to treat your data, please include an appropriate reference:</p>
