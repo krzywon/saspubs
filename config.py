@@ -48,7 +48,7 @@ SANS_HEADER = (SANS_HEADER_START + r"""
 SANS_FOOTER = r"""\
 """
 
-MACS_HEADER = r"""\
+MACS_HEADER = r"""
 <h2>Acknowledgement Information</h2>
 
 <p>If you write a paper that reports measurements using the MACS, please be sure to include this acknowledgement to the NSF, and to NIST</p>
