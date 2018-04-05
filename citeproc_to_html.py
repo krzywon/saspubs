@@ -131,6 +131,7 @@ TEMPLATE = """\
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} Publications</title>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+    <link rel="shortcut icon" href="https://www.nist.gov/sites/all/themes/nist_style/favicon.ico" type="image/vnd.microsoft.icon" />
     <link rel="stylesheet" href="css/drupal_header.css" />
     <style>
         body {{
