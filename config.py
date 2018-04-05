@@ -198,6 +198,36 @@ INSTRUMENTS = {
         "group": "2159399",
         "collection": "TCW8VPUS"
     },
+    "He3_CANDOR": {
+        "group": "2159399",
+        "collection": "FWNBJJNN",
+        "title": "He3 CANDOR Publications"
+    },
+    "He3_MACS": {
+        "group": "2159399",
+        "collection": "TTE8G75U",
+        "title": "He3 MACS Publications"
+    },
+    "He3_MAGIK": {
+        "group": "2159399",
+        "collection": "XVSBQW83",
+        "title": "He3 MAGIK Publications"
+    },
+    "He3_NSF": {
+        "group": "2159399",
+        "collection": "7BI5GZQK",
+        "title": "He3 NSF Publications"
+    },
+    "He3_SANS": {
+        "group": "2159399",
+        "collection": "79PMRAEH",
+        "title": "He3 SANS Publications"
+    },
+    "He3_TRIPLEAXIS": {
+        "group": "2159399",
+        "collection": "3UC3GUJA",
+        "title": "He3 Triple Axis Publications"
+    },
 }
 
 crossref_keys_to_import = [
