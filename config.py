@@ -193,7 +193,11 @@ INSTRUMENTS = {
     "TEST2": {
         "group": "1925268",
         "collection": "FAHFDH4G"
-    }
+    },
+    "He3": {
+        "group": "2159399",
+        "collection": "TCW8VPUS"
+    },
 }
 
 crossref_keys_to_import = [
