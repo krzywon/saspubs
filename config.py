@@ -33,11 +33,7 @@ USANS_HEADER = (SANS_HEADER_START + r"""
 """ + SANS_HEADER_FINISH)
 
 VSANS_HEADER = (SANS_HEADER_START + r"""
-<p>If you write a paper or give a presentation that reports measurements using the vSANS Instrument, please be sure to:</p>
-<ol>
-<li>include an <A href="https://www.nist.gov/ncnr/publishing-your-results/publishing-chrns-results">acknowledgement</A> to the NSF, and to NIST if there are no NIST coauthors,and</li>
-<li>include a reference to the paper describing the 30m SANS Instruments: "<a href="http://dx.doi.org/10.1107/S0021889897017020">The 30 m Small-Angle Neutron Scattering Instruments at the National Institute of Standards and Technology</a>", Glinka CJ, et al. <i>J Appl. Cryst.</i> <b>31</b>(3), 430 (1998).  Thanks!</li>
-</ol>
+<p>If you write a paper or give a presentation that reports measurements using the vSANS Instrument, please be sure to include an <A href="https://www.nist.gov/ncnr/publishing-your-results/publishing-chrns-results">acknowledgement</A> to the NSF, and to NIST if there are no NIST coauthors.</p>
 """ + SANS_HEADER_FINISH)
 
 SANS_HEADER = (SANS_HEADER_START + r"""
@@ -53,7 +49,7 @@ SANS_HEADER = (SANS_HEADER_START + r"""
 </ol>
 """ + SANS_HEADER_FINISH)
 
-SANS_FOOTER = r"""\
+SANS_FOOTER = r"""
 """
 
 MACS_HEADER = r"""
