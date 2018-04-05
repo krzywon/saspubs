@@ -242,6 +242,11 @@ INSTRUMENTS = {
         "collection": "3UC3GUJA",
         "title": "He3 Triple Axis"
     },
+    "SURF": {
+        "group": "2160414",
+        "collection": "6W59BX5Z",
+        "title": "NCNR SURF"
+    },
 }
 
 crossref_keys_to_import = [
