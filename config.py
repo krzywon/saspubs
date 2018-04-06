@@ -243,6 +243,11 @@ INSTRUMENTS = {
         "collection": "6W59BX5Z",
         "title": "NCNR SURF"
     },
+    "SHIP": {
+        "group": "2160414",
+        "collection": "IUV4DIQ3",
+        "title": "NCNR SHIP"
+    },
 }
 
 crossref_keys_to_import = [
