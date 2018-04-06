@@ -22,7 +22,6 @@
 
   <script type="text/javascript">
     var mainTable;
-    var link_renderers = {};
     var instruments = [
       {
           "id": "PBR",
@@ -88,6 +87,9 @@
       },
       {
           "id": "SURF"
+      },
+      {
+          "id": "SHIP"
       }
     ]
 
@@ -216,19 +218,6 @@
       return "<span class=\"year\" title=\"" + ts + "\">" + year + "</span>";
     }
     
-    function renderDataPaths(d, type, row) {
-        if ( type !== 'display' ) {
-            return JSON.stringify(d);
-        }
-        
-        var instr = instruments.find(function(s) { return s.id == row.instrument });
-        
-        return d.slice().sort().map(function(p) {
-            var output = p + ":&nbsp;";
-            output += instr.datalinks.map(function(r) { return link_renderers[r](p, row.clientPath) }).join("&nbsp;");
-            return output;
-        }).reverse().join('<br>');
-    }
 
     function renderAuthors(data, type, row) {
       //if ( type !== 'display' ) {
@@ -243,93 +232,87 @@
     }
     
     function renderTimestamps(data, type, row) {
-  if ( type !== 'display' ) {
-      return data;
-        }
+      if ( type !== 'display' ) {
+        return data;
+      }
   
-  var d = new Date(data);
-  var year = d.getFullYear().toFixed(0);
-  var month = (d.getMonth() + 1).toFixed(0);
-  var day = d.getDate().toFixed(0);
-  month = (month.length < 2) ? "0" + month : month;
-  day = (day.length < 2) ? "0" + day : day;
-  return year + "-" + month + "-" + day;
+      var d = new Date(data);
+      var year = d.getFullYear().toFixed(0);
+      var month = (d.getMonth() + 1).toFixed(0);
+      var day = d.getDate().toFixed(0);
+      month = (month.length < 2) ? "0" + month : month;
+      day = (day.length < 2) ? "0" + day : day;
+      return year + "-" + month + "-" + day;
     }
-    
-    link_renderers.log = function(p, clientPath) {
-  console.log({p: p, clientPath: clientPath});
-  return ""
-    }
-    
         
     $.fn.dataTable.render.ellipsis = function ( cutoff, wordbreak, escapeHtml ) {
-  var esc = function ( t ) {
-      return t
-    .replace( /&/g, '&amp;' )
-    .replace( /</g, '&lt;' )
-    .replace( />/g, '&gt;' )
-    .replace( /"/g, '&quot;' );
-  };
+      var esc = function ( t ) {
+          return t
+        .replace( /&/g, '&amp;' )
+        .replace( /</g, '&lt;' )
+        .replace( />/g, '&gt;' )
+        .replace( /"/g, '&quot;' );
+      };
      
-  return function ( d, type, row ) {
-      // Order, search and type get the original data
-      if ( type !== 'display' ) {
-    return d;
-      }
-     
-      if ( typeof d !== 'number' && typeof d !== 'string' ) {
-    return d;
-      }
-     
-      d = d.toString(); // cast numbers
-     
-      if ( d.length <= cutoff ) {
-    return d;
-      }
-     
-      var shortened = d.substr(0, cutoff-1);
-     
-      // Find the last white space character in the string
-      if ( wordbreak ) {
-    shortened = shortened.replace(/\s([^\s]*)$/, '');
-      }
-     
-      // Protect against uncontrolled HTML input
-      if ( escapeHtml ) {
-    shortened = esc( shortened );
-      }
-     
-      return '<span class="ellipsis" title="'+esc(d)+'">'+shortened+'&#8230;</span>';
-  };
+      return function ( d, type, row ) {
+          // Order, search and type get the original data
+          if ( type !== 'display' ) {
+        return d;
+          }
+         
+          if ( typeof d !== 'number' && typeof d !== 'string' ) {
+        return d;
+          }
+         
+          d = d.toString(); // cast numbers
+         
+          if ( d.length <= cutoff ) {
+        return d;
+          }
+         
+          var shortened = d.substr(0, cutoff-1);
+         
+          // Find the last white space character in the string
+          if ( wordbreak ) {
+        shortened = shortened.replace(/\s([^\s]*)$/, '');
+          }
+         
+          // Protect against uncontrolled HTML input
+          if ( escapeHtml ) {
+        shortened = esc( shortened );
+          }
+         
+          return '<span class="ellipsis" title="'+esc(d)+'">'+shortened+'&#8230;</span>';
+      };
     };
     
     
     window.onload = function() {
-  instruments.forEach(function(instr) {
-    $("select#instrument")
-            .append($("<option></option>")
-        .attr("value",instr.id)
-              .text(instr.id));
-  });
-  $("select#instrument")
-    .selectmenu()
-    .addClass("overflow")
-    .on( "selectmenuchange", function( event, ui ) {
-      change_instrument(this.value);
-      window.history.replaceState(null, this.value, "?instrument=" + this.value);
-  })
+      instruments.forEach(function(instr) {
+        $("select#instrument")
+                .append($("<option></option>")
+            .attr("value",instr.id)
+                  .text(instr.id));
+      });
+      $("select#instrument")
+        .selectmenu()
+        .addClass("overflow")
+        .on( "selectmenuchange", function( event, ui ) {
+          change_instrument(this.value);
+          window.history.replaceState(null, this.value, "?instrument=" + this.value);
+        })
   
-  if (instruments.find(function(s) { return s.id == instrument }) != null) {
-      $("select#instrument").val(instrument).selectmenu("refresh");
-  }
+      if (instruments.find(function(s) { return s.id == instrument }) != null) {
+          $("select#instrument").val(instrument).selectmenu("refresh");
+      }
   
-  change_instrument(instrument);
+      change_instrument(instrument);
         
-  $('.current-experiment-id').click( function() {
-            if (mainTable && mainTable.api) {
-                mainTable.api().search(this.textContent).draw();
-            }
-        });
+      $('.current-experiment-id').click( function() {
+                if (mainTable && mainTable.api) {
+                    mainTable.api().search(this.textContent).draw();
+                }
+            });
         
     
         myLayout = $('body').layout({
