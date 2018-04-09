@@ -138,7 +138,7 @@ def extract_DOI(item):
         DOI = DOI_IN_EXTRA.match(extra).groups()[0]
     return DOI
 
-def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, overwrite=False):
+def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, overwrite=True):
     for item in values:
         DOI = extract_DOI(item)
         if DOI is not None:
