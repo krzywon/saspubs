@@ -86,7 +86,8 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     if DEBUG: print("new data:", len(new_data), [item['id'] for item in new_data])
 
     #for key, item in zip(keys_to_update, new_data):
-    all_from_crossref(new_data)
+    #all_from_crossref(new_data)
+    append_from_crossref(new_data)
     
     for item in new_data:
         key = item["id"].split("/")[-1] #id is "ASD1234" or "12987296/ASD1234"
