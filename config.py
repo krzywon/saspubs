@@ -184,6 +184,11 @@ INSTRUMENTS = {
         "group": "1942669",
         "collection": "5NKTCIUL"
     },
+    "BT1": {
+        "group": "2165335",
+        "collection": "E8D4RVEN",
+        "title": "High Resolution Powder Diffractometer (BT1)"
+    },
     "MACS": {
         "group": "1942669",
         "collection": "SCPXUF5T",
