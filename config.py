@@ -137,7 +137,10 @@ NG7REFL_FOOTER = ""
 
 
 INSTRUMENTS = {
-    
+
+    "REFLECTOMETRY": {
+        "group": "2166004"
+    },
     "MAGIK": {
         "group": "2166004",
         "collection": "D5ZTWDSU"
