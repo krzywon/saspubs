@@ -153,13 +153,13 @@ INSTRUMENTS = {
         "footer": NG7REFL_FOOTER
     },
     "BT7": {
-        "group": "1942669",
-        "collection": "VWZ2CZZJ",
+        "group": "2166033",
+        "collection": "H4IW8NCY",
         "title": "Thermal Triple Axis"
     },
     "SPINS": {
-        "group": "1942669",
-        "collection": "ICQ7KQ23"
+        "group": "2166033",
+        "collection": "MV3MIITE"
     },
     "NSE": {
         "group": "2165335",

@@ -57,9 +57,13 @@ url_params = {
       #"base_url": "https://www.ncnr.nist.gov/instruments/hfbs/",
       #"current": "HFBS-Pub.xml"
     #},
-    "BT1": {
-        "base_url": "https://ncnr.nist.gov/instruments/bt1/",
-        "current": "bt1_pubs.html"
+    #"BT1": {
+    #    "base_url": "https://ncnr.nist.gov/instruments/bt1/",
+    #    "current": "bt1_pubs.html"
+    #},
+    "SPINS": {
+        "base_url": "https://www.ncnr.nist.gov/instruments/spins/",
+        "current": "spins_publist.html"
     }
 }
 
