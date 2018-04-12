@@ -161,12 +161,6 @@ INSTRUMENTS = {
         "group": "2166033",
         "collection": "MV3MIITE"
     },
-    "NSE": {
-        "group": "2165335",
-        "collection": "VQYVZ54R",
-        "header": NSE_HEADER,
-        "footer": NSE_FOOTER
-    },
     "SANS": {
         "group": "2166016",
         "collection": "FZGDMX7K",
@@ -221,6 +215,12 @@ INSTRUMENTS = {
         "collection": "ZQMGMHDK",
         "header": HFBS_HEADER,
         "footer": HFBS_FOOTER
+    },
+    "NSE": {
+        "group": "2165335",
+        "collection": "VQYVZ54R",
+        "header": NSE_HEADER,
+        "footer": NSE_FOOTER
     },
     "TEST": {
         "group": "1925268",
