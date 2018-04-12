@@ -118,21 +118,20 @@ or if the paper is listed but the information is incorrect or out of date, pleas
 NSE_FOOTER = ""
 
 NG7REFL_HEADER = """
-If you have written a paper that includes data taken on the NG7 horizontal reflectometer and you do not see it in the list below, 
+<p>If you have written a paper that includes data taken on the NG7 horizontal reflectometer and you do not see it in the list below, 
 or if the information in our list is incorrect, please contact 
-<a href="mailto:guangcui.yuan@nist.gov">Guangcui Yuan</a> with the correct information.
+<a href="mailto:guangcui.yuan@nist.gov">Guangcui Yuan</a> with the correct information.</p>
 
-If you write a paper that reports measurements using the NG7, please be sure to:
+<p>If you write a paper that reports measurements using the NG7, please be sure to:
 <a href="https://www.nist.gov/ncnr/publishing-your-results">include an acknowledgment to NIST</a> if there are no NIST co-authors.
-
 If you used the Reflpak software package to treat your data, please include 
-<a href="http://www.ncnr.nist.gov/reflpak">an appropriate reference or acknowledgment.</a>
+<a href="http://www.ncnr.nist.gov/reflpak">an appropriate reference or acknowledgment.</a></p>
 
-Please be aware that all papers with NIST co-authors must be reviewed and approved by the Washington Editorial Review Board (WERB). 
+<p>Please be aware that all papers with NIST co-authors must be reviewed and approved by the Washington Editorial Review Board (WERB). 
 Members of WERB are concerned not only with scientific merit but with three specific matters: 
 <strong>measurement uncertainties</strong>, the use of <strong>SI units</strong>, and <strong>brand names</strong>. 
 For more detailed information please <a href="https://www.nist.gov/ncnr/nist-technical-publication-policy-werb">click here</a> 
-and/or speak with your NIST co-author(s).
+and/or speak with your NIST co-author(s).</p>
 """
 NG7REFL_FOOTER = ""
 
