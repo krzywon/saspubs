@@ -178,8 +178,8 @@ INSTRUMENTS = {
         "collection": "HX4TS3LI"
     },
     "NSE": {
-        "group": "1942669",
-        "collection": "XT6XYDEH",
+        "group": "2165335",
+        "collection": "VQYVZ54R",
         "header": NSE_HEADER,
         "footer": NSE_FOOTER
     },
@@ -202,8 +202,8 @@ INSTRUMENTS = {
         "footer": SANS_FOOTER
     },
     "DCS": {
-        "group": "1942669",
-        "collection": "5NKTCIUL"
+        "group": "2165335",
+        "collection": "83IESXRD"
     },
     "BT1": {
         "group": "2165335",
@@ -211,14 +211,14 @@ INSTRUMENTS = {
         "title": "High Resolution Powder Diffractometer (BT1)"
     },
     "MACS": {
-        "group": "1942669",
-        "collection": "SCPXUF5T",
+        "group": "2165335",
+        "collection": "FP2YGZBZ",
         "header": MACS_HEADER,
         "footer": MACS_FOOTER
     },
     "HFBS": {
-        "group": "1942669",
-        "collection": "9GDX95BA",
+        "group": "2165335",
+        "collection": "ZQMGMHDK",
         "header": HFBS_HEADER,
         "footer": HFBS_FOOTER
     },
