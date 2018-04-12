@@ -204,6 +204,11 @@ INSTRUMENTS = {
         "collection": "E8D4RVEN",
         "title": "High Resolution Powder Diffractometer (BT1)"
     },
+    "BT8": {
+        "group": "2165335",
+        "collection": "DVGURUML",
+        "title": "Residual Stress Diffractometer (BT8)"
+    },
     "MACS": {
         "group": "2165335",
         "collection": "FP2YGZBZ",
