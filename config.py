@@ -152,12 +152,6 @@ INSTRUMENTS = {
         "header": NG7REFL_HEADER,
         "footer": NG7REFL_FOOTER
     },
-    "NG7SANS": {
-        "group": "2166016",
-        "collection": "6GI93ZWT",
-        "header": NG7SANS_HEADER,
-        "footer": SANS_FOOTER
-    },
     "BT7": {
         "group": "1942669",
         "collection": "VWZ2CZZJ",
@@ -167,16 +161,6 @@ INSTRUMENTS = {
         "group": "1942669",
         "collection": "ICQ7KQ23"
     },
-    "NGB30SANS": {
-        "group": "1942669",
-        "collection": "2TQMBS9X",
-        "header": NGB30SANS_HEADER,
-        "footer": SANS_FOOTER
-    },
-    "NGB10SANS": {
-        "group": "2166016",
-        "collection": "HX4TS3LI"
-    },
     "NSE": {
         "group": "2165335",
         "collection": "VQYVZ54R",
@@ -185,19 +169,35 @@ INSTRUMENTS = {
     },
     "SANS": {
         "group": "2166016",
-        "collection": "KXGE74AQ",
+        "collection": "FZGDMX7K",
         "header": SANS_HEADER,
         "footer": SANS_FOOTER
     },
+    "NG7SANS": {
+        "group": "2166016",
+        "collection": "WSEQ3LYT",
+        "header": NG7SANS_HEADER,
+        "footer": SANS_FOOTER
+    },
+    "NGB30SANS": {
+        "group": "2166016",
+        "collection": "CVGQN76Q",
+        "header": NGB30SANS_HEADER,
+        "footer": SANS_FOOTER
+    },
+    "NGB10SANS": {
+        "group": "2166016",
+        "collection": "PZXUUJ5C"
+    },
     "USANS": {
         "group": "2166016",
-        "collection": "WZ4CR66T",
+        "collection": "LX3BZ8EI",
         "header": USANS_HEADER,
         "footer": SANS_FOOTER
     },
     "VSANS": {
         "group": "2166016",
-        "collection": "J6RBTPRX",
+        "collection": "3WALQZV9",
         "header": VSANS_HEADER,
         "footer": SANS_FOOTER
     },

@@ -37,25 +37,29 @@ url_params = {
     #    "base_url": "https://ncnr.nist.gov/instruments/ng7refl/",
     #    "current": "NG7pubs.html"
     #},
-    "USANS": {
-      "base_url": "https://www.ncnr.nist.gov/instruments/usans/",
-      "current": "publications.html"
-    },
-    "USANS_earlier": {
-      "base_url": "https://www.ncnr.nist.gov/instruments/usans/",
-      "current": "publications_early.html" 
-    },
-    "DCS": {
-      "base_url": "https://ncnr.nist.gov/instruments/dcs/",
-      "current": "dcs_pubs.html"
-    },
-    "MACS": {
-      "base_url": "https://ncnr.nist.gov/instruments/macs/",
-      "current": "publications.html"
-    },
-    "HFBS": {
-      "base_url": "https://www.ncnr.nist.gov/instruments/hfbs/",
-      "current": "HFBS-Pub.xml"
+    #"USANS": {
+      #"base_url": "https://www.ncnr.nist.gov/instruments/usans/",
+      #"current": "publications.html"
+    #},
+    #"USANS_earlier": {
+      #"base_url": "https://www.ncnr.nist.gov/instruments/usans/",
+      #"current": "publications_early.html" 
+    #},
+    #"DCS": {
+      #"base_url": "https://ncnr.nist.gov/instruments/dcs/",
+      #"current": "dcs_pubs.html"
+    #},
+    #"MACS": {
+      #"base_url": "https://ncnr.nist.gov/instruments/macs/",
+      #"current": "publications.html"
+    #},
+    #"HFBS": {
+      #"base_url": "https://www.ncnr.nist.gov/instruments/hfbs/",
+      #"current": "HFBS-Pub.xml"
+    #},
+    "BT1": {
+        "base_url": "https://ncnr.nist.gov/instruments/bt1/",
+        "current": "bt1_pubs.html"
     }
 }
 
