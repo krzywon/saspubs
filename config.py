@@ -153,8 +153,8 @@ INSTRUMENTS = {
         "footer": NG7REFL_FOOTER
     },
     "NG7SANS": {
-        "group": "1942669",
-        "collection": "RV37EK44",
+        "group": "2166016",
+        "collection": "6GI93ZWT",
         "header": NG7SANS_HEADER,
         "footer": SANS_FOOTER
     },
@@ -174,8 +174,8 @@ INSTRUMENTS = {
         "footer": SANS_FOOTER
     },
     "NGB10SANS": {
-        "group": "1942669",
-        "collection": "QTGN36EH"
+        "group": "2166016",
+        "collection": "HX4TS3LI"
     },
     "NSE": {
         "group": "1942669",
@@ -184,20 +184,20 @@ INSTRUMENTS = {
         "footer": NSE_FOOTER
     },
     "SANS": {
-        "group": "1942669",
-        "collection": "BS3GD4WM",
+        "group": "2166016",
+        "collection": "KXGE74AQ",
         "header": SANS_HEADER,
         "footer": SANS_FOOTER
     },
     "USANS": {
-        "group": "1942669",
-        "collection": "64AMFBBD",
+        "group": "2166016",
+        "collection": "WZ4CR66T",
         "header": USANS_HEADER,
         "footer": SANS_FOOTER
     },
     "VSANS": {
-        "group": "1942669",
-        "collection": "E49EHS33",
+        "group": "2166016",
+        "collection": "J6RBTPRX",
         "header": VSANS_HEADER,
         "footer": SANS_FOOTER
     },
