@@ -139,16 +139,16 @@ NG7REFL_FOOTER = ""
 INSTRUMENTS = {
     
     "MAGIK": {
-        "group": "1942669",
-        "collection": "29DQ33DH"
+        "group": "2166004",
+        "collection": "D5ZTWDSU"
     },
     "PBR": {
-        "group": "1942136",
-        #"collection": "5FB99F7A"
+        "group": "2166004",
+        "collection": "8C7KHDHY"
     },
     "NG7REFL": {
-        "group": "1942669",
-        "collection": "TKAGDRTW",
+        "group": "2166004",
+        "collection": "HCCX2AK9",
         "header": NG7REFL_HEADER,
         "footer": NG7REFL_FOOTER
     },
