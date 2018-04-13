@@ -209,7 +209,7 @@ INSTRUMENTS = {
     },
     "BT8": {
         "group": "2165335",
-        "collection": "DVGURUML",
+        "collection": "E5JH2JXA",
         "title": "Residual Stress Diffractometer (BT8)"
     },
     "MACS": {
