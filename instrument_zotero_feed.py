@@ -93,6 +93,9 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
         counter += step
     if DEBUG: print("new data:", len(new_data), [item['id'] for item in new_data])
 
+    # fix incorrect keys in zotero CSL data
+    remap_zotero(new_data)
+    
     #for key, item in zip(keys_to_update, new_data):
     #all_from_crossref(new_data)
     append_from_crossref(new_data)
@@ -122,6 +125,14 @@ def process_zotero(instrument, include_JIF=True, filter_keys=True):
     open(version_path, "w").write(json.dumps(version_data, indent=2))
     makePage(instrument)
 
+
+def remap_zotero(values, mappings=ZOTERO_CSL_MAPPINGS):
+    keys_to_map = mappings.keys()
+    for key, new_key in mappings.items():
+        for item in values:
+            if key in item:
+                item[new_key] = item[key]
+                del item[key]
     
 def csl_from_crossref(doi):
     escaped_doi = quote(doi)
