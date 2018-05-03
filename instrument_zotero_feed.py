@@ -30,9 +30,17 @@ crossref_json_headers = {
 RETRIEVE_FROM_CROSSREF = [
     "is-referenced-by-count",
     "container-title-short",
-    "article-number",
+    "article-number"
+]
+
+OVERWRITE_FROM_CROSSREF = [
     "issued"
 ]
+
+ZOTERO_CSL_MAPPINGS = {
+    "journalAbbreviation": "container-title-short",
+    "shortTitle": "title-short"
+}
 
 
 def process_zotero(instrument, include_JIF=True, filter_keys=True):
@@ -138,15 +146,19 @@ def extract_DOI(item):
         DOI = DOI_IN_EXTRA.match(extra).groups()[0]
     return DOI
 
-def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, overwrite=True):
+def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, keys_to_overwrite=OVERWRITE_FROM_CROSSREF):
+    # values in the overwrite list will be overwritten
+    # values in the update list will be not overwrite if they exist.
     for item in values:
         DOI = extract_DOI(item)
         if DOI is not None:
             crossref_data = csl_from_crossref(item['DOI'])
             for key in keys_to_update:
+                if key in crossref_data and not key in item:
+                    item[key] = crossref_data[key]
+            for key in keys_to_overwrite:
                 if key in crossref_data:
-                    if overwrite or not key in item:
-                        item[key] = crossref_data[key]
+                    item[key] = crossref_data[key]
 
 def all_from_crossref(values):
     for item in values:
