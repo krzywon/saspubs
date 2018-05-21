@@ -125,15 +125,16 @@ def callback(t):
     pass
 
 TEMPLATE = """\
+<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title} Publications</title>
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet" />
     <link rel="shortcut icon" href="https://www.nist.gov/sites/all/themes/nist_style/favicon.ico" type="image/vnd.microsoft.icon" />
     <link rel="stylesheet" href="css/drupal_header.css" />
-    <style>
+    <style type="text/css">
         body {{
             font-family: Arial, Helvetica, sans-serif;
         }}
@@ -189,7 +190,7 @@ TEMPLATE = """\
         </div>
         <div class="centered-column" id="postscript">
         {postscript}
-        <div>
+        </div>
     </content>
 </body>
 </html>
