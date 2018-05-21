@@ -157,7 +157,7 @@ TEMPLATE = """\
             /*height: 50px;*/
         }}
         div.centered-column {{
-            flex: 1;
+            flex: 0 0 1;
             max-width: 900px;
             margin: auto;
         }}
