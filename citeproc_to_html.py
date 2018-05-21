@@ -178,20 +178,18 @@ TEMPLATE = """\
         </div>    
     </header>
     <header class="title"><h1>{title} Publications</h1></header>
-    <content>
-        <div class="centered-column" id="preamble">
-        {preamble}
-        </div>
-        <div class="centered-column" id="year_navigation">
-        {yearlinks}
-        </div>
-        <div class="centered-column">
-        {content}
-        </div>
-        <div class="centered-column" id="postscript">
-        {postscript}
-        </div>
-    </content>
+    <div class="centered-column" id="preamble">
+    {preamble}
+    </div>
+    <div class="centered-column" id="year_navigation">
+    {yearlinks}
+    </div>
+    <div class="centered-column">
+    {content}
+    </div>
+    <div class="centered-column" id="postscript">
+    {postscript}
+    </div>
 </body>
 </html>
 """
