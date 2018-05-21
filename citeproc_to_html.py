@@ -218,6 +218,6 @@ if __name__ == '__main__':
     instruments = sys.argv[1:]
     if len(instruments) < 1:
         print("usage: citeproc_to_html.py <instrument> <other_instrument>...")
-        return
-    for instrument in instruments:
-        makePage(instrument)
+    else:
+        for instrument in instruments:
+            makePage(instrument)
