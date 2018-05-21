@@ -149,7 +149,7 @@ TEMPLATE = """\
             content: '\A';
             white-space: pre;
         }}
-        content {{
+        div.content {{
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -178,17 +178,19 @@ TEMPLATE = """\
         </div>    
     </header>
     <header class="title"><h1>{title} Publications</h1></header>
-    <div class="centered-column" id="preamble">
-    {preamble}
-    </div>
-    <div class="centered-column" id="year_navigation">
-    {yearlinks}
-    </div>
-    <div class="centered-column">
-    {content}
-    </div>
-    <div class="centered-column" id="postscript">
-    {postscript}
+    <div class="content">
+        <div class="centered-column" id="preamble">
+        {preamble}
+        </div>
+        <div class="centered-column" id="year_navigation">
+        {yearlinks}
+        </div>
+        <div class="centered-column">
+        {content}
+        </div>
+        <div class="centered-column" id="postscript">
+        {postscript}
+        </div>
     </div>
 </body>
 </html>
@@ -210,3 +212,12 @@ def makePage(instrument):
     output = TEMPLATE.format(title=title, content=content, yearlinks=", ".join(year_links), preamble=preamble, postscript=postscript)
     output_filename = "static/{instrument}_pubs.html".format(instrument=instrument)
     open(output_filename, "w").write(output)
+    
+if __name__ == '__main__':
+    import sys
+    instruments = sys.argv[1:]
+    if len(instruments) < 1:
+        print("usage: citeproc_to_html.py <instrument> <other_instrument>...")
+    else:
+        for instrument in instruments:
+            makePage(instrument)
