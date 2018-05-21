@@ -217,7 +217,10 @@ if __name__ == '__main__':
     import sys
     instruments = sys.argv[1:]
     if len(instruments) < 1:
-        print("usage: citeproc_to_html.py <instrument> <other_instrument>...")
+        print("usage: citeproc_to_html.py <instrument> <other_instrument>... or citeproc_to_html.py all")
+    elif instruments[0].lower() == "all":
+        for instrument in INSTRUMENTS:
+            makePage(instrument)
     else:
         for instrument in instruments:
             makePage(instrument)
