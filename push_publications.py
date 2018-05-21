@@ -18,15 +18,24 @@ def push_instrument(instrument):
             version_info = json.loads(open(version_fullpath, 'r').read())
         else:
             version_info = {}
-        new_mtime = os.stat(db_fullpath).st_mtime
-        old_mtime = version_info.get("file_mtime", 0)
-        if new_mtime > old_mtime:
+            
+        new_db_mtime = os.stat(db_fullpath).st_mtime
+        old_db_mtime = version_info.get("db_file_mtime", 0)
+        db_push_needed = new_db_mtime > old_db_mtime
+        
+        new_pubs_mtime = os.stat(html_page_path).st_mtime if os.path.exists(html_page_path) else -1
+        old_pubs_mtime = version_info.get("pubs_file_mtime", 0)
+        pubs_push_needed = new_pubs_mtime > old_pubs_mtime
+        
+        if db_push_needed or pubs_push_needed:
             server_connection = SFTPConnection()
             server_connection.connect()
-            server_connection.sftp.put(db_fullpath, REMOTE_PATH + 'data/' + db_filename)
-            if os.path.exists(html_page_path):
+            if db_push_needed:
+                server_connection.sftp.put(db_fullpath, REMOTE_PATH + 'data/' + db_filename)
+                version_info["db_file_mtime"] = new_db_mtime
+            if pubs_push_needed and os.path.exists(html_page_path):
                 server_connection.sftp.put(html_page_path, REMOTE_PATH + instrument + "_pubs.html")
-            version_info["file_mtime"] = new_mtime
+                version_info["pubs_file_mtime"] = new_pubs_mtime
             open(version_fullpath, "w").write(json.dumps(version_info, 2))
             
 if __name__=='__main__':

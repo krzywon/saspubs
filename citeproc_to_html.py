@@ -212,3 +212,12 @@ def makePage(instrument):
     output = TEMPLATE.format(title=title, content=content, yearlinks=", ".join(year_links), preamble=preamble, postscript=postscript)
     output_filename = "static/{instrument}_pubs.html".format(instrument=instrument)
     open(output_filename, "w").write(output)
+    
+if __name__ == '__main__':
+    import sys
+    instruments = sys.argv[1:]
+    if len(instruments) < 1:
+        print("usage: citeproc_to_html.py <instrument> <other_instrument>...")
+        return
+    for instrument in instruments:
+        makePage(instrument)
