@@ -142,7 +142,7 @@ information is incorrect or out of date, please inform
 <a href="mailto:craig.brown@nist.gov">Craig Brown</a>.<BR><BR>
 
 If you write a paper that reports measurements using the DCS taken before June 2015, please be sure to
-(a) include an <A href="/programs/CHRNS/publications.html">
+(a) include an <A href="https://www.nist.gov/ncnr/chrns/chrns-publications-and-acknowledgements">
 acknowledgement</A> to the NSF, and to NIST if there are no NIST coauthors,
 and
 (b) include a reference to the following paper describing the DCS:
@@ -158,7 +158,7 @@ data obtained using the Disk Chopper Spectrometer.  If you used the
 to the following paper:
 R.T. Azuah, L.R. Kneller, Y. Qiu, P.L.W. Tregenna-Piggott, C.M. Brown,
 J.R.D. Copley, and R.M. Dimeo,
-<a href="http://nvl.nist.gov/pub/nistpubs/jres/114/6/V114.N06.A04.pdf">
+<a href="http://dx.doi.org/10.6028/jres.114.025">
 "DAVE: A comprehensive software suite for the reduction,
 visualization, and analysis of low energy neutron
 spectroscopic data"</a>,
@@ -172,7 +172,7 @@ three specific matters:
 <b><u>measurement uncertainties</u></b>, the use of <b><u>SI units</u></b>,
 and <b><u>brand names</u></b>.
 For more detailed information
-<b><A href="dcs_pubs_werb.html">click here</A></b>,
+<b><A href="https://www.nist.gov/ncnr/nist-technical-publication-policy-werb">click here</A></b>,
 and/or speak with your NIST coauthor(s).<p>
 </h3>
 """
