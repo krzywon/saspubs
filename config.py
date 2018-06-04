@@ -135,6 +135,48 @@ and/or speak with your NIST co-author(s).</p>
 """
 NG7REFL_FOOTER = ""
 
+DCS_HEADER = """
+If you have written a paper that reports measurements using the DCS and
+you do not see it in the list below, or if the paper is listed but the
+information is incorrect or out of date, please inform
+<a href="mailto:craig.brown@nist.gov">Craig Brown</a>.<BR><BR>
+
+If you write a paper that reports measurements using the DCS taken before June 2015, please be sure to
+(a) include an <A href="/programs/CHRNS/publications.html">
+acknowledgement</A> to the NSF, and to NIST if there are no NIST coauthors,
+and
+(b) include a reference to the following paper describing the DCS:
+J.R.D. Copley and J.C. Cook,
+<A href="http://dx.doi.org/10.1016/S0301-0104(03)00124-1">
+"The Disk Chopper Spectrometer at NIST: a new instrument for quasielastic
+neutron scattering studies"</A>,
+Chem. Phys. 292, 477 (2003).  Thanks!<p>
+
+The <A href="/dave">DAVE software package</A> is generally used to treat
+data obtained using the Disk Chopper Spectrometer.  If you used the
+<A href="/dave">DAVE software package</A> please include a reference
+to the following paper:
+R.T. Azuah, L.R. Kneller, Y. Qiu, P.L.W. Tregenna-Piggott, C.M. Brown,
+J.R.D. Copley, and R.M. Dimeo,
+<a href="http://nvl.nist.gov/pub/nistpubs/jres/114/6/V114.N06.A04.pdf">
+"DAVE: A comprehensive software suite for the reduction,
+visualization, and analysis of low energy neutron
+spectroscopic data"</a>,
+J. Res. Natl. Inst. Stan. Technol. 114, 341 (2009).
+Thanks again!<p>
+
+<h3><b>All papers with NIST coauthors must be reviewed and
+approved by the Washington Editorial Review Board (WERB).</b>
+Members of WERB are concerned not only with scientific merit but with
+three specific matters:
+<b><u>measurement uncertainties</u></b>, the use of <b><u>SI units</u></b>,
+and <b><u>brand names</u></b>.
+For more detailed information
+<b><A href="dcs_pubs_werb.html">click here</A></b>,
+and/or speak with your NIST coauthor(s).<p>
+</h3>
+"""
+DCS_FOOTER = ""
 
 INSTRUMENTS = {
 
@@ -200,7 +242,9 @@ INSTRUMENTS = {
     },
     "DCS": {
         "group": "2165335",
-        "collection": "83IESXRD"
+        "collection": "83IESXRD",
+        "header": DCS_HEADER,
+        "footer": DCS_FOOTER
     },
     "BT1": {
         "group": "2165335",
