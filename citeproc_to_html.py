@@ -147,7 +147,7 @@ TEMPLATE = """\
         jax: ["input/TeX", "output/HTML-CSS"],
         tex2jax: {{
           inlineMath: [ ['$','$'], ['\\\(', '\\\)'] ],
-          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          displayMath: [ ['$$','$$'] ],
           processEscapes: true
         }},
         "HTML-CSS": {{ fonts: ["TEX"] }}
