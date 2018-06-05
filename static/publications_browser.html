@@ -126,7 +126,7 @@
         buttons: ['excel', 'csv', 'pdf' ],
         data: data,
         select: false,
-        order: [[8, "desc"]],
+        order: [[9, "desc"]],
         /*
         dom: 'lfrtBip',
         buttons: [
@@ -162,6 +162,7 @@
           { data: 'volume', title: 'volume', defaultContent: '--', className: "column-volume"},
           { data: function(r) { return r['page'] || r['article-number'] || '--'}, title: 'page', defaultContent: '--'},
           { data: function(r) { return r['issued'] || r['date'] || "--" }, title: 'year', render:  renderYear},
+          { data: function(r) { return r['issued'] || r['date'] || "--" }, title: 'issued', render: renderDate}
           //{ "searchable": false, "orderable": false, "targets": 0, render: function() { return document.createElement('button') }}
           
         ]
@@ -228,10 +229,15 @@
       var ts = getTimestring(d);
       var year = ts.split("-")[0] || "";
       if (type !== 'display' ) {
-          return ts
-          //return new Date(ts).toISOString();
+          return year;
       }
       return "<span class=\"year\" title=\"" + ts + "\">" + year + "</span>";
+    }
+    
+    function renderDate(d, type, row) {
+      //console.log(type);
+      var ts = getTimestring(d);
+      return ts;
     }
     
 
