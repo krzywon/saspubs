@@ -102,6 +102,7 @@ def generateHTML(db, min_year=float('-inf'), max_year=float('inf'), group_by_yea
     output_years = [year for year in years if year <= max_year and year >=min_year]
     year_cite_items = []
     year_link_items = []
+    patent_items = []
     for year in output_years:
         year_link_items.append('<a href="#year_%d">%d</a>' % (year,year))
         keys = yearLookup[year]
@@ -113,13 +114,19 @@ def generateHTML(db, min_year=float('-inf'), max_year=float('inf'), group_by_yea
             bibliography.register(c)
         
         bib = bibliography.bibliography()
-        bib_output = [unescape("\n".join(b)) for b in bib]
+        cite_bib = []
+        for k,b in zip(keys, bib):
+            if db[k].get('type', None) == 'patent':
+                patent_items.append(unescape("".join(b)))
+            else:
+                cite_bib.append(b)
+        bib_output = [unescape("".join(b)) for b in cite_bib]
         year_output = ['<div class="year-heading" id="year_%d"><h2>%d</h2><a href="#year_navigation">top</a></div>\n<hr>' % (year, year)]
         year_output.append('<ol class="publications">')
         year_output.extend(bib_output)
         year_output.append('</ol>')
         year_cite_items.append("\n".join(year_output))
-    return {"citations": year_cite_items, "links": year_link_items}
+    return {"citations": year_cite_items, "links": year_link_items, "patents": patent_items}
 
 def callback(t):
     pass
@@ -196,6 +203,15 @@ TEMPLATE = """\
 </html>
 """
 
+PATENTS_SECTION="""
+            <div class="patents">
+                <h2>Patents</h2>
+                    <ol>
+                        {patent_items}
+                    </ol>
+            </div>
+"""
+
 def makePage(instrument):
     csl_db_filename = DB_FILENAME_FMT.format(instrument=instrument)
     csl_db_path = os.path.join(DB_PATH, csl_db_filename)
@@ -203,10 +219,13 @@ def makePage(instrument):
     content_pieces = generateHTML(db)
     citations = content_pieces["citations"]
     year_links = content_pieces["links"]
+    patents = content_pieces["patents"]
     citations.reverse()
     year_links.reverse()
     content = "\n".join(citations)
     preamble = INSTRUMENTS[instrument].get('header', '')
+    if len(patents) > 0:
+        preamble += PATENTS_SECTION.format(patent_items="\n                        ".join(patents))
     postscript = INSTRUMENTS[instrument].get('footer', '')
     title = INSTRUMENTS[instrument].get("title", "{instrument} Instrument".format(instrument=instrument))
     output = TEMPLATE.format(title=title, content=content, yearlinks=", ".join(year_links), preamble=preamble, postscript=postscript)
