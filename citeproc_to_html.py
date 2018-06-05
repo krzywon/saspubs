@@ -141,6 +141,21 @@ TEMPLATE = """\
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700" rel="stylesheet" />
     <link rel="shortcut icon" href="https://www.nist.gov/sites/all/themes/nist_style/favicon.ico" type="image/vnd.microsoft.icon" />
     <link rel="stylesheet" href="css/drupal_header.css" />
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({{
+        extensions: ["tex2jax.js"],
+        jax: ["input/TeX", "output/HTML-CSS"],
+        tex2jax: {{
+          inlineMath: [ ['$','$'], ['\\\(', '\\\)'] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true
+        }},
+        "HTML-CSS": {{ fonts: ["TEX"] }}
+      }});
+    </script>
+    <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML">
+    </script>
     <style>
         body {{
             font-family: Arial, Helvetica, sans-serif;
