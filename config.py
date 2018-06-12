@@ -27,7 +27,7 @@ NGB30SANS_HEADER = (SANS_HEADER_START + r"""
 USANS_HEADER = (SANS_HEADER_START + r"""
 <p>If you write a paper or give a presentation that reports measurements using the USANS Instrument, please be sure to:</p>
 <ol type="lower-alpha">
-<li>include an <A href="https://www.nist.gov/ncnr/publishing-your-results/publishing-chrns-results">acknowledgement</A> to the NSF, and to NIST if there are no NIST coauthors,and</li>
+<li>include an <A href="https://www.nist.gov/ncnr/chrns/chrns-publications-and-acknowledgements#acknowledging">acknowledgement</A> to the NSF, and to NIST if there are no NIST coauthors,and</li>
 <li>include a reference to the paper describing the USANS Instrument: "<a href="http://dx.doi.org/10.1107/S0021889805032103">Design and performance of a thermal-neutron double-crystal diffractometer for USANS at NIST</a>", Barker JG, et al. <i>J Appl. Cryst.</i> <b>38</b>(6), 1004 (2005).</li>
 </ol>
 """ + SANS_HEADER_FINISH)
