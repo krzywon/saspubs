@@ -178,6 +178,23 @@ and/or speak with your NIST coauthor(s).<p>
 """
 DCS_FOOTER = ""
 
+MAGIK_PBR_HEADER = """\
+<p>If you have written a paper that includes data taken on the {instrument} reflectometer and you do not see it in the list below, 
+or if the information in our list is incorrect, please contact 
+<a href="mailto:{instrument_contact_email}">{instrument_contact}</a> with the correct information.</p>
+
+<p>If you write a paper that reports measurements using the {instrument}, please be sure to:
+<a href="https://www.nist.gov/ncnr/publishing-your-results">include an acknowledgment to NIST</a> if there are no NIST co-authors.
+If you used the reductus service to reduce your data, please include 
+<a href="https://doi.org/10.1107/S1600576718011974">an appropriate reference or acknowledgment.</a></p>
+"""
+
+MAGIK_HEADER = MAGIK_PBR_HEADER.format(instrument="MAGIK", instrument_contact_email="brian.maranville@nist.gov", instrument_contact="Brian Maranville")
+MAGIK_FOOTER = ""
+
+PBR_HEADER = MAGIK_PBR_HEADER.format(instrument="PBR", instrument_contact_email="brian.kirby@nist.gov", instrument_contact="Brian Kirby")
+PBR_FOOTER = ""
+
 INSTRUMENTS = {
 
     "REFLECTOMETRY": {
@@ -185,11 +202,15 @@ INSTRUMENTS = {
     },
     "MAGIK": {
         "group": "2166004",
-        "collection": "D5ZTWDSU"
+        "collection": "D5ZTWDSU",
+        "header": MAGIK_HEADER,
+        "footer": MAGIK_FOOTER
     },
     "PBR": {
         "group": "2166004",
-        "collection": "8C7KHDHY"
+        "collection": "8C7KHDHY",
+        "header": PBR_HEADER,
+        "footer": PBR_FOOTER
     },
     "NG7REFL": {
         "group": "2166004",
