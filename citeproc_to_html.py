@@ -7,6 +7,8 @@ from citeproc.py2compat import *
 import json
 import os
 import re
+from dateutil import parser as dateparser
+import datetime
 
 # Import the citeproc-py classes we'll use below.
 from citeproc import CitationStylesStyle, CitationStylesBibliography
@@ -34,40 +36,26 @@ MONTHDAY_FIRST_SLASH = re.compile(r'^(\d{1,2}/)+\d{4}$')
 YEAR_FIRST_SLASH = re.compile(r'^\d{4}(/\d{1,2})+$')
 ISO_STYLE_DATE = re.compile(r'^\d{4}(-\d{1,2}){0,1,2}$')
 JUST_YEAR = re.compile(r'\d{4}')
+DEFAULT_DATE = dateparser.parse("1970-01-01 00:00:00")
 
 def getYear(item):
     issued = item.get("issued", {})
     if 'date-parts' in issued:
         return issued['date-parts'][0][0]
     elif 'raw' in issued:
-        ts = issued['raw']
-        ts = '-'.join(ts.split('/')[::-1])
-        return int(ts.split('-')[0])
+        d = dateparser.parse(issued['raw'])
+        return d.year
         
 def getDateString(item):
     issued = item.get("issued", {})
     if 'date-parts' in issued:
-        ta = issued['date-parts'][0]
-        #return "-".join(map(lambda d: format(d, '02d'), issued['date-parts'][0]))
+        date_array = issued['date-parts'][0]
+        ts = "-".join(map(str, date_array)) 
     elif 'raw' in issued:
         ts = issued['raw']
-        # convert slash dates to ISO format YYYY-MM-DD
-        if MONTHDAY_FIRST_SLASH.match(ts):
-            ta = ts.split('/')[::-1]
-        elif YEAR_FIRST_SLASH.match(ts):
-            ta = ts.split('/')
-        elif ISO_STYLE_DATE.match(ts):
-            ta = ts.split('-')
-        else:
-            #something else... just get the year.
-            ta = JUST_YEAR.findall(ts)
-        ta = list(map(int, ta))
     
-    date_array = [1970,1,1]
-    for i, ti in enumerate(ta):
-        if i<3:
-            date_array[i] = ti
-    return "-".join(map(lambda d: format(d, '02d'), date_array))
+    d = dateparser.parse(ts, default=DEFAULT_DATE)
+    return d.date().isoformat()
         
 def sortYear(items):
     yearLookup = {}

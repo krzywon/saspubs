@@ -3,6 +3,7 @@ import json
 import os
 import urllib
 import re
+from dateutil import parser as dateparser
 
 try:
     from urllib.parse import quote
@@ -17,6 +18,7 @@ DEBUG = True
 
 VERSIONS = "format=versions"
 ZOTERO_API = "https://api.zotero.org"
+DEFAULT_DATESTR = "1970-01-01"
 
 TARGET_DIRECTORY = "./"
 
@@ -35,7 +37,7 @@ RETRIEVE_FROM_CROSSREF = [
 ]
 
 OVERWRITE_FROM_CROSSREF = [
-    "issued"
+    #"issued"
 ]
 
 ZOTERO_CSL_MAPPINGS = {
@@ -171,6 +173,14 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, keys_to_
             for key in keys_to_overwrite:
                 if key in crossref_data:
                     item[key] = crossref_data[key]
+            if "issued" in item:
+                try:
+                    d = dateparser.parse(item['issued'])
+                except:
+                    if "issued" in crossref_data:
+                        item['issued'] = crossref_data['issued']
+                    else:
+                        item['issued'] = {'raw': DEFAULT_DATESTR}
 
 def all_from_crossref(values):
     for item in values:
