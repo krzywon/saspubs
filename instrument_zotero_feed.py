@@ -12,7 +12,7 @@ except ImportError:
 
 from config import INSTRUMENTS, crossref_keys_to_import, DB_PATH, DB_FILENAME_FMT, VERSION_FILENAME_FMT
 import JIF
-from citeproc_to_html import makePage
+from citeproc_to_html import makePage, getDateString
 
 DEBUG = True
 
@@ -175,8 +175,9 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, keys_to_
                     item[key] = crossref_data[key]
             if "issued" in item:
                 try:
-                    d = dateparser.parse(item['issued'])
+                    ds = getDateString(item)
                 except:
+                    # if getDateString throws an error, use the crossref value
                     if "issued" in crossref_data:
                         item['issued'] = crossref_data['issued']
                     else:
