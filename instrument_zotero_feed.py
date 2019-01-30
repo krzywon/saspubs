@@ -178,6 +178,7 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, keys_to_
                     ds = getDateString(item)
                 except:
                     # if getDateString throws an error, use the crossref value
+                    if DEBUG: print("processing date error: ", item, crossref_data.get("issued", "no issued"))
                     if "issued" in crossref_data:
                         item['issued'] = crossref_data['issued']
                     else:

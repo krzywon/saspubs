@@ -41,7 +41,7 @@ DEFAULT_DATE = dateparser.parse("1970-01-01 00:00:00")
 def getYear(item):
     issued = item.get("issued", {})
     if 'date-parts' in issued:
-        return issued['date-parts'][0][0]
+        return int(issued['date-parts'][0][0])
     elif 'raw' in issued:
         d = dateparser.parse(issued['raw'])
         return d.year
