@@ -1,14 +1,14 @@
-# NCNR automated publications feed
+# SasView automated publications feed
+
+Based off of ncnr_publications created by Brian Maranville.
 
 ## Backend
 
 Based on [Zotero](https://www.zotero.org)
 
-- [ncnr_publications](https://www.zotero.org/groups/1942669/ncnr_instruments/items) group (private membership, public read)
-- collections for each instrument (BT7, MAGIK, DCS, etc.)
-- Instrument scientist manages publication list
-- Collection ID for instruments is added to config.py for automatic sync with NCNR pages (frontend)
-
+- [ncnr_publications](https://www.zotero.org/groups/2309096/sasview/items) group (private membership, public read)
+- SasView members manage publication list
+- Collection ID(s) for SasView list(s) is added to config.py for automatic sync with sasview pages (frontend)
 
 ### Recurring backend jobs
 
@@ -19,16 +19,13 @@ Based on [Zotero](https://www.zotero.org)
 
 ## Frontend
 
-Static pages pushed to the NCNR server https://ncnr.nist.gov
+Static pages pushed to the sasview.github.io repository.
 Two views:
 
 1.  Pretty view
-  * https://ncnr.nist.gov/publications/publications_browser.html?instrument=NG7SANS
-  * https://ncnr.nist.gov/publications/publications_browser.html?instrument=BT7
-  * ...
+  * https://sasview.org/publications_browser.html
 2.  Table view:
-  * https://ncnr.nist.gov/publications/NG7SANS_pubs.html
-  * https://ncnr.nist.gov/publications/MAGIK_pubs.html
+  * https://ncnr.nist.gov/publications/sasview_pubs.html
  
 <i>citation count is from crossref.org</i>
 <i>JIF is from Thomson Reuters</i>

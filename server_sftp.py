@@ -1,9 +1,11 @@
 import paramiko
 
-DEST_HOST = "webster.ncnr.nist.gov"
+# TODO: Modify host params and use SSH, not SFTP
+
+DEST_HOST = ""
 DEST_PORT = 22
-DEST_PKEY_FILE = '/home/bbm/.ssh/datapushkey'
-DEST_USERNAME = "bbm"
+DEST_PKEY_FILE = ''
+DEST_USERNAME = ""
 
 class SFTPConnection(object):
     def __init__(self, dest_host=DEST_HOST, dest_port=DEST_PORT):
