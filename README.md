@@ -6,7 +6,7 @@ Based off of ncnr_publications created by Brian Maranville.
 
 Based on [Zotero](https://www.zotero.org)
 
-- [ncnr_publications](https://www.zotero.org/groups/2309096/sasview/items) group (private membership, public read)
+- [sasview_publications](https://www.zotero.org/groups/2309096/sasview/items) group (private membership, public read)
 - SasView members manage publication list
 - Collection ID(s) for SasView list(s) is added to config.py for automatic sync with sasview pages (frontend)
 
@@ -22,10 +22,8 @@ Based on [Zotero](https://www.zotero.org)
 Static pages pushed to the sasview.github.io repository.
 Two views:
 
-1.  Pretty view
-  * https://sasview.org/publications_browser.html
-2.  Table view:
-  * https://ncnr.nist.gov/publications/sasview_pubs.html
+1.  Pretty view - https://sasview.org/publications_browser.html?group=SASVIEW
+2.  Table view - https://sasview.org/publications/sasview_pubs.html
  
 <i>citation count is from crossref.org</i>
 <i>JIF is from Thomson Reuters</i>
