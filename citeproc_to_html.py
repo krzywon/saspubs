@@ -78,7 +78,7 @@ def sort_year(items):
 def generate_md(db, min_year=float('-inf'), max_year=float('inf'), group_by_year=True):
 
     directory = os.path.dirname(os.path.abspath(__file__))
-    file_location = directory + os.path.sep + "static" + os.path.sep + "NCNR_linktitle"
+    file_location = directory + os.path.sep + "static" + os.path.sep + "SasView_linktitle"
     bib_style = CitationStylesStyle(file_location, validate=False)
 
     # Create the citeproc-py bibliography, passing it the:
@@ -100,10 +100,10 @@ def generate_md(db, min_year=float('-inf'), max_year=float('inf'), group_by_year
     year_link_items = []
     patent_items = []
     for year in output_years:
-        year_link_items.append('<a href="#year_{0}">{0}</a>'.format(year))
+        year_link_items.append('[{0}](#{0})'.format(year))
         keys = year_lookup[year]
         keys.sort(key=lambda l: get_date_string(db[l]), reverse=True)
-        bibliography = CitationStylesBibliography(bib_style, bib_source, formatter.html)
+        bibliography = CitationStylesBibliography(bib_style, bib_source, formatter.plain)
         citations = [Citation([CitationItem(k)]) for k in keys]
         for c in citations:
             bibliography.register(c)
@@ -116,10 +116,11 @@ def generate_md(db, min_year=float('-inf'), max_year=float('inf'), group_by_year
             else:
                 cite_bib.append(b)
         bib_output = [unescape("".join(b)) for b in cite_bib]
-        year_output = ['<div class="year-heading" id="year {0}"><h4>{0}</h4><a href="#year_navigation">top</a></div>\n<hr>'.format(year)]
-        year_output.append('<ol class="publications">')
-        year_output.extend(bib_output)
-        year_output.append('</ol>')
+        year_output = ['### {0}\n'.format(year)]
+        year_output.append('[top](#acknowledgements-and-contacts)\n---\n')
+        for i, bib_i in enumerate(bib_output):
+            bib_final = ("{0}. " + bib_i).format(i)
+            year_output.append(bib_final)
         year_cite_items.append("\n".join(year_output))
     return {"citations": year_cite_items, "links": year_link_items, "patents": patent_items}
 
@@ -128,12 +129,11 @@ def callback(t):
     pass
 
 
-TEMPLATE = """
----
+TEMPLATE = """---
 layout: page
 title: {title}
 ---
-### Acknowledgements / Contacts
+## Acknowledgements and Contacts
 
 If you found this software useful to your work please don't forget to acknowledge its use in your publications as suggested below and reference this website: _http://www.sasview.org/_. Please also consider letting us know by sending us the reference to your work. This will help us to ensure the long term support and development of the software.
 
@@ -141,9 +141,13 @@ If you found this software useful to your work please don't forget to acknowledg
 
 {preamble}
 
-{content}
+---
 
-{yearlinks}
+{year_links}
+
+---
+
+{content}
 
 {postscript}
 """
@@ -171,7 +175,7 @@ def make_page(group):
         preamble += PATENTS_SECTION.format(patent_items="\n                        ".join(patents))
     postscript = GROUPS[group].get('footer', '')
     title = GROUPS[group].get("title", "{group}".format(group=group))
-    output = TEMPLATE.format(title=title, content=content, yearlinks=", ".join(year_links), preamble=preamble, postscript=postscript)
+    output = TEMPLATE.format(title=title, content=content, year_links=", ".join(year_links), preamble=preamble, postscript=postscript)
     output_filename = "static/{group}_publications.md".format(group=group)
     with io.open(output_filename, 'w', encoding='utf8') as f:
         f.write(output)

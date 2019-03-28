@@ -3,12 +3,12 @@ SASVIEW_HEADER = r"""
 information is incorrect or out of date, please inform <a href="mailto:jkrzywon@nist.gov">Jeff Krzywon</a> and/or <a href="mailto:andrew.jackson@esss.se@nist.gov">Andrew Jackson</a>.</p>
 """
 
-SASVIEW_FOOTER = r"""
-"""
+SASVIEW_FOOTER = r""""""
 
 GROUPS = {
     "SASVIEW": {
         "group": "2309096",
+        "title": "Publications",
         "header": SASVIEW_HEADER,
         "footer": SASVIEW_FOOTER
     }
