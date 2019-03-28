@@ -36,6 +36,7 @@ MONTHDAY_FIRST_SLASH = re.compile(r'^(\d{1,2}/)+\d{4}$')
 YEAR_FIRST_SLASH = re.compile(r'^\d{4}(/\d{1,2})+$')
 ISO_STYLE_DATE = re.compile(r'^\d{4}(-\d{1,2}){0,1,2}$')
 JUST_YEAR = re.compile(r'\d{4}')
+NO_DATE = "1970-01-01 00:00:00"
 DEFAULT_DATE = dateparser.parse("1970-01-01 00:00:00")
 
 
@@ -46,6 +47,8 @@ def get_year(item):
     elif 'raw' in issued:
         d = dateparser.parse(issued['raw'])
         return d.year
+    else:
+        return 0
 
 
 def get_date_string(item):
@@ -55,6 +58,8 @@ def get_date_string(item):
         ts = "-".join(map(str, date_array)) 
     elif 'raw' in issued:
         ts = issued['raw']
+    else:
+        ts = NO_DATE
     
     d = dateparser.parse(ts, default=DEFAULT_DATE)
     return d.date().isoformat()
@@ -71,7 +76,9 @@ def sort_year(items):
 
 def generate_md(db, min_year=float('-inf'), max_year=float('inf'), group_by_year=True):
 
-    bib_style = CitationStylesStyle('./NCNR_linktitle', validate=False)
+    directory = os.path.dirname(os.path.abspath(__file__))
+    file_location = directory + os.path.sep + "static" + os.path.sep + "NCNR_linktitle"
+    bib_style = CitationStylesStyle(file_location, validate=False)
 
     # Create the citeproc-py bibliography, passing it the:
     # * CitationStylesStyle,
@@ -92,7 +99,7 @@ def generate_md(db, min_year=float('-inf'), max_year=float('inf'), group_by_year
     year_link_items = []
     patent_items = []
     for year in output_years:
-        year_link_items.append('<a href="#year_%d">%d</a>' % year)
+        year_link_items.append('<a href="#year_{0}">{0}</a>'.format(year))
         keys = year_lookup[year]
         keys.sort(key=lambda l: get_date_string(db[l]), reverse=True)
         bibliography = CitationStylesBibliography(bib_style, bib_source, formatter.html)
@@ -108,7 +115,7 @@ def generate_md(db, min_year=float('-inf'), max_year=float('inf'), group_by_year
             else:
                 cite_bib.append(b)
         bib_output = [unescape("".join(b)) for b in cite_bib]
-        year_output = ['<div class="year-heading" id="year_%d"><h4>%d</h4><a href="#year_navigation">top</a></div>\n<hr>' % year]
+        year_output = ['<div class="year-heading" id="year {0}"><h4>{0}</h4><a href="#year_navigation">top</a></div>\n<hr>'.format(year)]
         year_output.append('<ol class="publications">')
         year_output.extend(bib_output)
         year_output.append('</ol>')

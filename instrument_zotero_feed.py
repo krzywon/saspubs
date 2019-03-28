@@ -55,6 +55,8 @@ def process_zotero(group, include_JIF=True, filter_keys=True):
     
     version_filename = VERSION_FILENAME_FMT.format(group=group)
     csl_db_filename = DB_FILENAME_FMT.format(group=group)
+    if not os.path.isdir(DB_PATH):
+        os.mkdir(DB_PATH)
     version_path = os.path.join(DB_PATH, version_filename)
     csl_db_path = os.path.join(DB_PATH, csl_db_filename)
     if not os.path.isfile(version_path):
