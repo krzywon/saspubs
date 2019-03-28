@@ -69,12 +69,12 @@
   <macro name="linktitle">
     <choose>
       <if variable="DOI">
-        <text variable="DOI" prefix="&lt;a href=&quot;https://doi.org/" suffix="&quot;&gt;" />
-        <text macro="title" suffix="&lt;/a&gt;&lt;br/&gt;" />
+        <text macro="title" prefix="[" suffix="]" />
+        <text variable="DOI" prefix="(https://doi.org/" suffix=")" />
       </if>
       <else-if variable="URL">
-        <text variable="URL" prefix="&lt;a href=&quot;" suffix="&quot;&gt;" />
-        <text macro="title" suffix="&lt;/a&gt;&lt;br/&gt;" />
+        <text macro="title" prefix="[" suffix="]" />
+        <text variable="URL" prefix="(" suffix=")" />
       </else-if>
       <else>
         <text macro="title" quotes="true" />

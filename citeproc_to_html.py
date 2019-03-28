@@ -116,8 +116,9 @@ def generate_md(db, min_year=float('-inf'), max_year=float('inf'), group_by_year
             else:
                 cite_bib.append(b)
         bib_output = [unescape("".join(b)) for b in cite_bib]
-        year_output = ['### {0}\n'.format(year)]
-        year_output.append('[top](#acknowledgements-and-contacts)\n---\n')
+        year_output = ['## {0}\n'.format(year)]
+        year_output.append('<small>[top](#acknowledgements-and-contacts)</small>\n')
+        year_output.append('---\n')
         for i, bib_i in enumerate(bib_output):
             bib_final = ("{0}. " + bib_i).format(i)
             year_output.append(bib_final)
