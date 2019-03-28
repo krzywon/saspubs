@@ -7,6 +7,7 @@ from citeproc.py2compat import *
 import json
 import os
 import re
+import io
 from dateutil import parser as dateparser
 import datetime
 
@@ -156,7 +157,8 @@ PATENTS_SECTION = """
 def make_page(group):
     csl_db_filename = DB_FILENAME_FMT.format(group=group)
     csl_db_path = os.path.join(DB_PATH, csl_db_filename)
-    db = json.loads(open(csl_db_path, "r").read())
+    with io.open(csl_db_path, 'r', encoding='utf8') as f:
+        db = json.loads(f.read())
     content_pieces = generate_md(db)
     citations = content_pieces["citations"]
     year_links = content_pieces["links"]
@@ -171,7 +173,8 @@ def make_page(group):
     title = GROUPS[group].get("title", "{group}".format(group=group))
     output = TEMPLATE.format(title=title, content=content, yearlinks=", ".join(year_links), preamble=preamble, postscript=postscript)
     output_filename = "static/{group}_publications.md".format(group=group)
-    open(output_filename, "w").write(output)
+    with io.open(output_filename, 'w', encoding='utf8') as f:
+        f.write(output)
 
 
 if __name__ == '__main__':
