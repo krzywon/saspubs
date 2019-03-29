@@ -1,14 +1,17 @@
 import json
 import os
+# import git # TODO: Fix git import
 
-from server_sftp import SFTPConnection
-from config import INSTRUMENTS, DB_PATH, DB_FILENAME_FMT, VERSION_FILENAME_FMT, REMOTE_PATH
 
-def push_instrument(instrument):
-    db_filename = DB_FILENAME_FMT.format(instrument=instrument)
+from server_sftp import SSHConnection
+from config import GROUPS, DB_PATH, DB_FILENAME_FMT, VERSION_FILENAME_FMT, REMOTE_PATH
+
+
+def push_group(group):
+    db_filename = DB_FILENAME_FMT.format(group=group)
     db_fullpath = os.path.join(DB_PATH, db_filename)
-    html_page_path = os.path.join("static", instrument + "_pubs.html")
-    version_filename = VERSION_FILENAME_FMT.format(db_path=DB_PATH, instrument=instrument)
+    html_page_path = os.path.join("static", group + "_publications.html")
+    version_filename = VERSION_FILENAME_FMT.format(db_path=DB_PATH, group=group)
     version_fullpath = os.path.join(DB_PATH, version_filename)
     if not os.path.exists(db_fullpath):
         # nothing to push
@@ -28,21 +31,22 @@ def push_instrument(instrument):
         pubs_push_needed = new_pubs_mtime > old_pubs_mtime
         
         if db_push_needed or pubs_push_needed:
-            server_connection = SFTPConnection()
+            server_connection = SSHConnection()
             server_connection.connect()
             if db_push_needed:
                 server_connection.sftp.put(db_fullpath, REMOTE_PATH + 'data/' + db_filename)
                 version_info["db_file_mtime"] = new_db_mtime
             if pubs_push_needed and os.path.exists(html_page_path):
-                server_connection.sftp.put(html_page_path, REMOTE_PATH + instrument + "_pubs.html")
+                server_connection.sftp.put(html_page_path, REMOTE_PATH + group + "_publications.html")
                 version_info["pubs_file_mtime"] = new_pubs_mtime
             open(version_fullpath, "w").write(json.dumps(version_info, 2))
-            
+
+
 if __name__=='__main__':
     import sys
     if len(sys.argv) > 1:
-        push_instrument(sys.argv[1])
+        push_group(sys.argv[1])
         
     else: 
-        for instrument in INSTRUMENTS:
-            push_instrument(instrument)
+        for group in GROUPS:
+            push_group(group)
