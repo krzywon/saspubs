@@ -177,7 +177,7 @@ def make_page(group):
     postscript = GROUPS[group].get('footer', '')
     title = GROUPS[group].get("title", "{group}".format(group=group))
     output = TEMPLATE.format(title=title, content=content, year_links=", ".join(year_links), preamble=preamble, postscript=postscript)
-    output_filename = "static/{group}_publications.md".format(group=group)
+    output_filename = "static" + os.path.sep + "{group}_publications.md".format(group=group)
     with io.open(output_filename, 'w', encoding='utf8') as f:
         f.write(output)
 
