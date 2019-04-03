@@ -1,0 +1,7 @@
+name: zotero
+dependencies:
+  - citeproc
+  - dateutil
+  - urllib
+  - html
+  - HTMLParser
