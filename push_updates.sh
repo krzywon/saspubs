@@ -4,8 +4,16 @@
 # Pass a ssh private key file name as the first argument
 # saspubs and sasview.github.io must be on the same base path
 
-# Activate the conda environment
-conda.bat activate zotero
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     ext=".sh";;
+    Darwin*)    ext=".sh";;
+    CYGWIN*)    ext=".bat";;
+    MINGW*)     ext=".bat";;
+    *)          ext=""
+esac
+
+conda${ext} activate zotero
 # Pull latest saspubs repo
 git pull
 # Output the latest publications page
@@ -22,4 +30,4 @@ git diff-index --quiet HEAD -- || ssh-agent bash -c "ssh-add " + $SSHKEY
 # Commit and push any changes to the publications page
 git commit publications.md -m "publications auto-update `date -d now`"; git push
 # Deactivate the conda environment
-conda.bat deactivate
+conda${ext} deactivate
