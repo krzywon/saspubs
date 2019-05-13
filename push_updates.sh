@@ -16,7 +16,7 @@ cp static/SASVIEW_publications.md ../sasview.github.io/publications.md
 cd ../sasview.github.io/
 ssh-agent -t 60 bash -c "ssh-add $SSHKEY; git pull"
 # Check for differences
-if git diff-index --quiet HEAD --; then
+if ! git diff-index --quiet HEAD --; then
   # Commit and push any changes to the publications page
   git commit publications.md -m "publications auto-update `date -d now`"
   ssh-agent -t 60 bash -c "ssh-add $SSHKEY;  git push"
