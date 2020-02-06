@@ -66,6 +66,10 @@ def get_date_string(item):
     return d.date().isoformat()
 
 
+def get_title(item):
+    return item.get("title", "")
+
+
 def sort_year(items):
     year_lookup = {}
     for key, value in items:
@@ -102,7 +106,7 @@ def generate_md(db, min_year=float('-inf'), max_year=float('inf'), group_by_year
     for year in output_years:
         year_link_items.append('[{0}](#{0})'.format(year))
         keys = year_lookup[year]
-        keys.sort(key=lambda l: get_date_string(db[l]), reverse=True)
+        keys.sort(key=lambda l: get_title(db[l]), reverse=False)
         bibliography = CitationStylesBibliography(bib_style, bib_source, formatter.plain)
         citations = [Citation([CitationItem(k)]) for k in keys]
         for c in citations:
