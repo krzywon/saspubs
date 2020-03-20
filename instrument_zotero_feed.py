@@ -24,7 +24,7 @@ DOI_IN_EXTRA = re.compile(r'DOI:\s+([^\s]+)')
 
 crossref_json_headers = {
     "Accept": "application/vnd.citationstyles.csl+json",
-    "User-Agent": "NCNR Publications Manager (https://ncnr.nist.gov/publications/publications_browser.html; mailto:brian.maranville@nist.gov)"
+    "User-Agent": "SasView Publications Manager (http://sasview.org/publications/; mailto:jkrzywon@nist.gov)"
 }
 
 RETRIEVE_FROM_CROSSREF = [
@@ -142,7 +142,7 @@ def csl_from_crossref(doi):
     escaped_doi = quote(doi)
     if DEBUG: print(doi, escaped_doi)
     transform = "application/vnd.citationstyles.csl+json"
-    mailto = "mailto=brian.maranville@nist.gov"
+    mailto = "mailto=jkrzywon@nist.gov"
     request_url = "https://api.crossref.org/works/{doi}/transform/{transform}?{mailto}".format(doi=escaped_doi, transform=transform, mailto=mailto)
     rj = requests.get(request_url)
     try: 
