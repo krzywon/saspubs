@@ -1,6 +1,7 @@
 # SasView automated publications feed
 
 Based off of ncnr_publications created by Brian Maranville.
+More information is available on the [SasView wiki](https://github.com/SasView/sasview/wiki/DevNotes_Processes_PublicationsWebPageInstructions).
 
 ## Backend
 
