@@ -1,8 +1,17 @@
 import os
 import json
+import datetime
 
 from config import GROUPS, DB_FILENAME_FMT, DB_PATH, crossref_keys_to_update
 from instrument_zotero_feed import append_from_crossref, extract_doi
+
+
+def older_duplicate(db, dup1, dup2):
+    acc1 = db[dup1]['accessed']['date-parts'][0]
+    acc2 = db[dup2]['accessed']['date-parts'][0]
+    date_dup1 = datetime.date(acc1[0], acc1[1], acc1[2])
+    date_dup2 = datetime.date(acc2[0], acc2[1], acc2[2])
+    return db[dup1] if date_dup1 < date_dup2 else db[dup2]
 
 
 def check_all_against_current(update_group=''):
@@ -15,13 +24,17 @@ def check_all_against_current(update_group=''):
         duplicate_dict = dict([(key, list(doi_dict.keys())[list(
             doi_dict.values()).index(doi)]) for key, doi, in doi_dict.items()
                                if doi is not None])
-
+        remove_list = [older_duplicate(db, key, value) for key, value in
+                       duplicate_dict.items() if key != value]
         for key in crossref_keys_to_update:
-            # long hand to check why this fails
             update_list.extend([item for item in db.values() if key not in
                                 item.keys()])
-        append_from_crossref(update_list,
-                             keys_to_update=crossref_keys_to_update)
+        updates = append_from_crossref(update_list,
+                                       keys_to_update=crossref_keys_to_update,
+                                       values_to_delete=remove_list)
+        if updates is not {}:
+            # TODO: Do something with the updates -> jsonify?
+            pass
 
 
 if __name__ == '__main__':

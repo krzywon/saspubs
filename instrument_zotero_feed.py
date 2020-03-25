@@ -163,19 +163,29 @@ def extract_doi(item):
     return DOI
 
 
-def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, keys_to_overwrite=OVERWRITE_FROM_CROSSREF):
+def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
+                         keys_to_overwrite=OVERWRITE_FROM_CROSSREF,
+                         values_to_delete=None):
     # values in the overwrite list will be overwritten
     # values in the update list will be not overwrite if they exist.
+    return_db = {}
+    values_to_delete = [] if values_to_delete is None else values_to_delete
+    changes = False
     for item in values:
+        if item in values_to_delete:
+            changes = True
+            continue
         DOI = extract_doi(item)
         if DOI is not None:
             crossref_data = csl_from_crossref(item['DOI'])
             for key in keys_to_update:
                 if key in crossref_data and not key in item:
+                    changes = True
                     item[key] = crossref_data[key]
                     if DEBUG: print('Updating {0} of DOI {1}'.format(key, DOI))
             for key in keys_to_overwrite:
                 if key in crossref_data:
+                    changes = True
                     item[key] = crossref_data[key]
             if "issued" in item:
                 try:
@@ -187,6 +197,9 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, keys_to_
                         item['issued'] = crossref_data['issued']
                     else:
                         item['issued'] = {'raw': DEFAULT_DATESTR}
+        key = item["id"].split("/")[-1]
+        return_db[key] = item
+    return return_db if changes else {}
 
 
 def all_from_crossref(values):
