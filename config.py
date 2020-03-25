@@ -30,6 +30,15 @@ crossref_keys_to_import = [
     "is-referenced-by-count"
 ]
 
+crossref_keys_to_update = [
+    "title",
+    "author",
+    "volume",
+    "page",
+    "article-number",
+    "issued",
+]
+
 DB_PATH = "./data"
 DB_FILENAME_FMT = "{group}.json"
 VERSION_FILENAME_FMT = ".{group}_version.json"

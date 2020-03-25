@@ -9,7 +9,6 @@ import os
 import re
 import io
 from dateutil import parser as dateparser
-import datetime
 
 # Import the citeproc-py classes we'll use below.
 from citeproc import CitationStylesStyle, CitationStylesBibliography

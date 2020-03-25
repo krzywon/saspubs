@@ -173,6 +173,7 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF, keys_to_
             for key in keys_to_update:
                 if key in crossref_data and not key in item:
                     item[key] = crossref_data[key]
+                    if DEBUG: print('Updating {0} of DOI {1}'.format(key, DOI))
             for key in keys_to_overwrite:
                 if key in crossref_data:
                     item[key] = crossref_data[key]
