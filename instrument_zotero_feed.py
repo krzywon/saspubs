@@ -165,15 +165,32 @@ def extract_doi(item):
 
 def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
                          keys_to_overwrite=OVERWRITE_FROM_CROSSREF,
-                         values_to_delete=None):
+                         values_to_delete=None,
+                         group=None, api_key=None):
     # values in the overwrite list will be overwritten
     # values in the update list will be not overwrite if they exist.
-    return_db = {}
     values_to_delete = [] if values_to_delete is None else values_to_delete
-    changes = False
+    push_updates = False
+    if group and api_key:
+        group_path = "groups/" + GROUPS[group]["group"]
+        collection = GROUPS[group].get("collection", None)
+        if collection:
+            collection_path = group_path + "/collections/" + collection
+        else:
+            collection_path = group_path
+        collection_endpoint = ZOTERO_API + "/" + collection_path
+        header = {'Zotero-API-Key': api_key}
+        push_updates = True
     for item in values:
+        changes = False
+        db_key = item["id"].split("/")[-1]
         if item in values_to_delete:
-            changes = True
+            if push_updates:
+                result = requests.delete("{collection}/items/{db_key}".format(
+                    collection=collection_endpoint, db_key=db_key),
+                    headers=header)
+                if DEBUG: print(result)
+            # Do not continue with any updates for deleted items
             continue
         DOI = extract_doi(item)
         if DOI is not None:
@@ -182,24 +199,19 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
                 if key in crossref_data and not key in item:
                     changes = True
                     item[key] = crossref_data[key]
-                    if DEBUG: print('Updating {0} of DOI {1}'.format(key, DOI))
             for key in keys_to_overwrite:
                 if key in crossref_data:
                     changes = True
                     item[key] = crossref_data[key]
-            if "issued" in item:
-                try:
-                    ds = get_date_string(item)
-                except:
-                    # if getDateString throws an error, use the crossref value
-                    if DEBUG: print("processing date error: ", item, crossref_data.get("issued", "no issued"))
-                    if "issued" in crossref_data:
-                        item['issued'] = crossref_data['issued']
-                    else:
-                        item['issued'] = {'raw': DEFAULT_DATESTR}
-        key = item["id"].split("/")[-1]
-        return_db[key] = item
-    return return_db if changes else {}
+        if changes and push_updates:
+            header['Content-Type'] = 'application/json'
+            # FIXME: Getting 400, bad request - send data properly
+            result = requests.put(
+                url="{collection}/items/{db_key}?data={data}".format(
+                    collection=collection_endpoint, db_key=db_key, data=item),
+                headers=header)
+            if DEBUG: print(result)
+            header.pop('Content-Type')
 
 
 def all_from_crossref(values):
@@ -214,15 +226,19 @@ def patch_db_from_crossref(group, keys_to_patch):
     csl_db_filename = DB_FILENAME_FMT.format(group=group)
     csl_db_path = os.path.join(DB_PATH, csl_db_filename)
     db = json.loads(open(csl_db_path, 'r').read())
-    append_from_crossref(db.values(), keys_to_update=keys_to_patch, overwrite=True)
+    append_from_crossref(db.values(), keys_to_update=keys_to_patch, group=group)
     open(csl_db_path, "w").write(json.dumps(db))
 
 
-if __name__=='__main__':
-    import sys
-    if len(sys.argv) > 1:
-        process_zotero(sys.argv[1])
-        
-    else: 
+def main(args):
+    if len(args) > 1:
+        process_zotero(args[1])
+    else:
         for group in GROUPS:
             process_zotero(group)
+
+
+if __name__ == '__main__':
+    import sys
+    if len(sys.argv) > 1:
+        main(sys.argv[1])
