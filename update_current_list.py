@@ -2,7 +2,7 @@ import os
 import json
 
 from config import GROUPS, DB_FILENAME_FMT, DB_PATH, crossref_keys_to_update
-from instrument_zotero_feed import append_from_crossref
+from instrument_zotero_feed import append_from_crossref, extract_doi
 
 
 def check_all_against_current(update_group=''):
@@ -11,6 +11,11 @@ def check_all_against_current(update_group=''):
         csl_db_path = os.path.join(DB_PATH, csl_db_filename)
         db = json.loads(open(csl_db_path, 'r').read())
         update_list = []
+        doi_dict = dict([(key, extract_doi(item)) for key, item in db.items()])
+        duplicate_dict = dict([(key, list(doi_dict.keys())[list(
+            doi_dict.values()).index(doi)]) for key, doi, in doi_dict.items()
+                               if doi is not None])
+
         for key in crossref_keys_to_update:
             # long hand to check why this fails
             update_list.extend([item for item in db.values() if key not in
