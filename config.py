@@ -32,11 +32,10 @@ crossref_keys_to_import = [
 
 crossref_keys_to_update = [
     "title",
-    "author",
     "volume",
-    "page",
-    "article-number",
-    "issued",
+    "issue",
+    "pages",
+    "date",
 ]
 
 DB_PATH = "./data"

@@ -2,7 +2,8 @@ import os
 import json
 import datetime
 
-from config import GROUPS, DB_FILENAME_FMT, DB_PATH, VERSION_FILENAME_FMT
+from config import GROUPS, DB_FILENAME_FMT, DB_PATH, VERSION_FILENAME_FMT,\
+    crossref_keys_to_update
 from instrument_zotero_feed import append_from_crossref, extract_doi
 from instrument_zotero_feed import main as zotero_feed_main
 
@@ -29,9 +30,12 @@ def check_all_against_current(update_group, zotero_key=''):
             duplicate_dict[doi] = [key]
     remove_list.extend(older_duplicates(db, key_list) for doi, key_list in
                        duplicate_dict.items() if len(key_list) > 1)
-    append_from_crossref(values_to_delete=remove_list,
-                         group=update_group, api_key=zotero_key)
-    if len(remove_list) > 0:
+    update_list = [item for item in db.values()]
+    changes = append_from_crossref(update_list,
+                                   keys_to_update=crossref_keys_to_update,
+                                   values_to_delete=remove_list,
+                                   group=update_group, api_key=zotero_key)
+    if changes:
         version_filename = VERSION_FILENAME_FMT.format(group=update_group)
         version_path = os.path.join(DB_PATH, version_filename)
         os.remove(csl_db_path)

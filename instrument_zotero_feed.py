@@ -10,7 +10,7 @@ except ImportError:
 
 from config import GROUPS, DB_PATH, DB_FILENAME_FMT, VERSION_FILENAME_FMT
 import JIF
-from citeproc_to_html import make_page, get_date_string
+from citeproc_to_html import make_page
 
 DEBUG = True
 
@@ -163,25 +163,53 @@ def extract_doi(item):
     return DOI
 
 
-def append_from_crossref(values_to_delete=None,
-                         group=None, api_key=None):
+def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
+                         keys_to_overwrite=OVERWRITE_FROM_CROSSREF,
+                         values_to_delete=None, group=None, api_key=None):
     values_to_delete = [] if values_to_delete is None else values_to_delete
     push_updates = False
+    changes_made = False
     if group and api_key:
         group_path = "groups/" + GROUPS[group]["group"]
-        collection = GROUPS[group].get("collection", None)
-        if collection:
-            collection_path = group_path + "/collections/" + collection
-        else:
-            collection_path = group_path
-        collection_endpoint = ZOTERO_API + "/" + collection_path
+        group_endpoint = ZOTERO_API + "/" + group_path
         header = {'Authorization': 'Bearer ' + api_key}
         push_updates = True
-    for item in values_to_delete:
-        if push_updates:
-            result = requests.delete("{collection}/items/{db_key}".format(
-                collection=collection_endpoint, db_key=item), headers=header)
+    for item in values:
+        mods = {}
+        db_key = item["id"].split("/")[-1]
+        url = "{collection}/items/{db_key}?v=3".format(
+            collection=group_endpoint, db_key=db_key)
+        zotero_response = requests.get(url=url)
+        zotero_item = json.loads(zotero_response.text)
+        if item in values_to_delete:
+            if push_updates:
+                result = requests.delete(url=url, headers=header)
+                if DEBUG: print(result)
+                changes_made = True
+            # Do not continue with any updates for deleted items
+            continue
+        DOI = extract_doi(item)
+        if DOI is not None:
+            crossref_data = csl_from_crossref(item['DOI'])
+            zotero_data = zotero_item.get("data", {})
+            for key in keys_to_update:
+                if key in crossref_data and key not in zotero_data:
+                    mods[key] = crossref_data[key]
+            for key in keys_to_overwrite:
+                if key in crossref_data:
+                    mods[key] = crossref_data[key]
+        if len(mods) > 0 and push_updates:
+            header['Content-Type'] = 'application/json'
+            current_version = zotero_item.get("data", {'version': 0}
+                                              ).get("version", 0)
+            header['If-Unmodified-Since-Version'] = str(current_version)
+            mods = json.loads(json.dumps({"data": mods}))
+            result = requests.patch(url=url, json=mods, headers=header)
             if DEBUG: print(result)
+            header.pop('Content-Type')
+            header.pop('If-Unmodified-Since-Version')
+            changes_made = True
+    return changes_made
 
 
 def all_from_crossref(values):
@@ -204,3 +232,6 @@ if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
         main([sys.argv[1]])
+    else:
+        for group in GROUPS:
+            main([group])
