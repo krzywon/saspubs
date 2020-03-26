@@ -38,8 +38,10 @@ def check_all_against_current(update_group, zotero_key=''):
     if changes:
         version_filename = VERSION_FILENAME_FMT.format(group=update_group)
         version_path = os.path.join(DB_PATH, version_filename)
+        md_path = "./static/{group}_publications.md".format(group=update_group)
         os.remove(csl_db_path)
         os.remove(version_path)
+        os.remove(md_path)
         zotero_feed_main([update_group])
 
 

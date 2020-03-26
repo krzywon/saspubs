@@ -140,10 +140,9 @@ def remap_zotero(values, mappings=ZOTERO_CSL_MAPPINGS):
 
 def csl_from_crossref(doi):
     escaped_doi = quote(doi)
-    if DEBUG: print(doi, escaped_doi)
     transform = "application/vnd.citationstyles.csl+json"
-    mailto = "mailto=jkrzywon@nist.gov"
-    request_url = "https://api.crossref.org/works/{doi}/transform/{transform}?{mailto}".format(doi=escaped_doi, transform=transform, mailto=mailto)
+    request_url = "https://api.crossref.org/works/{doi}/transform/{transform}"
+    request_url = request_url.format(doi=escaped_doi, transform=transform)
     rj = requests.get(request_url)
     try: 
         content = rj.json()
@@ -177,10 +176,11 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
     for item in values:
         mods = {}
         db_key = item["id"].split("/")[-1]
-        url = "{collection}/items/{db_key}?v=3".format(
-            collection=group_endpoint, db_key=db_key)
-        zotero_response = requests.get(url=url)
-        zotero_item = json.loads(zotero_response.text)
+        if group and api_key:
+            url = "{collection}/items/{db_key}?v=3".format(
+                collection=group_endpoint, db_key=db_key)
+            zotero_response = requests.get(url=url)
+            zotero_item = json.loads(zotero_response.text)
         if item in values_to_delete:
             if push_updates:
                 result = requests.delete(url=url, headers=header)
@@ -191,10 +191,14 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
         DOI = extract_doi(item)
         if DOI is not None:
             crossref_data = csl_from_crossref(item['DOI'])
-            zotero_data = zotero_item.get("data", {})
             for key in keys_to_update:
-                if key in crossref_data and key not in zotero_data:
-                    mods[key] = crossref_data[key]
+                if key in crossref_data and (key not in item or (
+                        key in item and item[key] != crossref_data[key])):
+                    # CRUFT for API differences - page vs pages keys
+                    if key == 'page':
+                        mods['pages'] = crossref_data[key]
+                    else:
+                        mods[key] = crossref_data[key]
             for key in keys_to_overwrite:
                 if key in crossref_data:
                     mods[key] = crossref_data[key]

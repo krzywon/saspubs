@@ -34,7 +34,7 @@ crossref_keys_to_update = [
     "title",
     "volume",
     "issue",
-    "pages",
+    "page",
     "date",
 ]
 
