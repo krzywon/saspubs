@@ -163,12 +163,8 @@ def extract_doi(item):
     return DOI
 
 
-def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
-                         keys_to_overwrite=OVERWRITE_FROM_CROSSREF,
-                         values_to_delete=None,
+def append_from_crossref(values_to_delete=None,
                          group=None, api_key=None):
-    # values in the overwrite list will be overwritten
-    # values in the update list will be not overwrite if they exist.
     values_to_delete = [] if values_to_delete is None else values_to_delete
     push_updates = False
     if group and api_key:
@@ -179,39 +175,13 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
         else:
             collection_path = group_path
         collection_endpoint = ZOTERO_API + "/" + collection_path
-        header = {'Zotero-API-Key': api_key}
+        header = {'Authorization': 'Bearer ' + api_key}
         push_updates = True
-    for item in values:
-        changes = False
-        db_key = item["id"].split("/")[-1]
-        if item in values_to_delete:
-            if push_updates:
-                result = requests.delete("{collection}/items/{db_key}".format(
-                    collection=collection_endpoint, db_key=db_key),
-                    headers=header)
-                if DEBUG: print(result)
-            # Do not continue with any updates for deleted items
-            continue
-        DOI = extract_doi(item)
-        if DOI is not None:
-            crossref_data = csl_from_crossref(item['DOI'])
-            for key in keys_to_update:
-                if key in crossref_data and not key in item:
-                    changes = True
-                    item[key] = crossref_data[key]
-            for key in keys_to_overwrite:
-                if key in crossref_data:
-                    changes = True
-                    item[key] = crossref_data[key]
-        if changes and push_updates:
-            header['Content-Type'] = 'application/json'
-            # FIXME: Getting 400, bad request - send data properly
-            result = requests.put(
-                url="{collection}/items/{db_key}?data={data}".format(
-                    collection=collection_endpoint, db_key=db_key, data=item),
-                headers=header)
+    for item in values_to_delete:
+        if push_updates:
+            result = requests.delete("{collection}/items/{db_key}".format(
+                collection=collection_endpoint, db_key=item), headers=header)
             if DEBUG: print(result)
-            header.pop('Content-Type')
 
 
 def all_from_crossref(values):
@@ -220,14 +190,6 @@ def all_from_crossref(values):
         if DOI is not None:
             crossref_data = csl_from_crossref(item['DOI'])
             item.update(crossref_data)
-
-
-def patch_db_from_crossref(group, keys_to_patch):
-    csl_db_filename = DB_FILENAME_FMT.format(group=group)
-    csl_db_path = os.path.join(DB_PATH, csl_db_filename)
-    db = json.loads(open(csl_db_path, 'r').read())
-    append_from_crossref(db.values(), keys_to_update=keys_to_patch, group=group)
-    open(csl_db_path, "w").write(json.dumps(db))
 
 
 def main(args):
@@ -241,4 +203,4 @@ def main(args):
 if __name__ == '__main__':
     import sys
     if len(sys.argv) > 1:
-        main(sys.argv[1])
+        main([sys.argv[1]])
