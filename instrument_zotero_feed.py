@@ -12,8 +12,6 @@ from config import GROUPS, DB_PATH, DB_FILENAME_FMT, VERSION_FILENAME_FMT
 import JIF
 from citeproc_to_html import make_page
 
-DEBUG = True
-
 VERSIONS = "format=versions"
 ZOTERO_API = "https://api.zotero.org"
 DEFAULT_DATESTR = "1970-01-01"
@@ -89,12 +87,9 @@ def process_zotero(group, include_JIF=True, filter_keys=True):
     while counter < number_to_update:
         key_subset = keys_to_update[counter:counter+step]
         key_subset_str = ",".join(key_subset)
-        if DEBUG: print(key_subset)
         partial_data = requests.get("%s/items?format=csljson&itemKey=%s" % (collection_endpoint, key_subset_str)).json()
         new_data.extend(partial_data["items"])
-        if DEBUG: print(partial_data["items"])
         counter += step
-    if DEBUG: print("new data:", len(new_data), [item['id'] for item in new_data])
 
     # fix incorrect keys in zotero CSL data
     remap_zotero(new_data)
@@ -111,11 +106,9 @@ def process_zotero(group, include_JIF=True, filter_keys=True):
     deletions_version =  int(deleted_rq.headers["Last-Modified-Version"])
     deleted_data = deleted_rq.json()
     number_to_delete = len(deleted_data.get("items", []))
-    if DEBUG: print("to delete:", deleted_data)
     number_actually_deleted = 0
     for dkey in deleted_data['items']:
         if dkey in db:
-            if DEBUG: print("deleting key:", dkey)
             del db[dkey]
             number_actually_deleted += 1
             
@@ -148,7 +141,6 @@ def csl_from_crossref(doi):
         content = rj.json()
         return content
     except Exception as e:
-        if DEBUG: print("not processing doi: %s because of error: %s" % (doi,str(e)))
         return {}
 
 
@@ -184,7 +176,6 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
         if item in values_to_delete:
             if push_updates:
                 result = requests.delete(url=url, headers=header)
-                if DEBUG: print(result)
                 changes_made = True
             # Do not continue with any updates for deleted items
             continue
@@ -209,7 +200,8 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
             header['If-Unmodified-Since-Version'] = str(current_version)
             mods = json.loads(json.dumps({"data": mods}))
             result = requests.patch(url=url, json=mods, headers=header)
-            if DEBUG: print(result)
+            if result.status_code != 204:
+                print("Issue modifying {doi}: {response}".format(DOI, result))
             header.pop('Content-Type')
             header.pop('If-Unmodified-Since-Version')
             changes_made = True
