@@ -8,6 +8,7 @@ SASVIEW_FOOTER = r""""""
 GROUPS = {
     "SASVIEW": {
         "group": "2309096",
+        "collection": "46Q9CENK",
         "title": "Publications",
         "header": SASVIEW_HEADER,
         "footer": SASVIEW_FOOTER
