@@ -198,8 +198,8 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
             current_version = zotero_item.get("data", {'version': 0}
                                               ).get("version", 0)
             header['If-Unmodified-Since-Version'] = str(current_version)
-            mods = json.loads(json.dumps({"data": mods}))
-            result = requests.patch(url=url, json=mods, headers=header)
+            mods = json.dumps({"data": mods})
+            result = requests.patch(url=url, data=mods, headers=header)
             if result.status_code != 204:
                 print("Issue modifying {doi}: {response}".format(DOI, result))
             header.pop('Content-Type')

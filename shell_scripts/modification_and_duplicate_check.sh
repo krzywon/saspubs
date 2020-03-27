@@ -9,6 +9,7 @@ SSHKEY=$1
 APIKEY=$2
 # Change path to directory of the script in case it isn't already
 cd "$(dirname "$0")";
+cd "../";
 # Pull latest saspubs repo
 ssh-agent -t 60 bash -c "ssh-add $SSHKEY; git pull";
 # Output the latest publications page
