@@ -8,7 +8,7 @@ from instrument_zotero_feed import append_from_crossref, extract_doi
 from instrument_zotero_feed import main as zotero_feed_main
 
 
-def older_duplicates(db, keys):
+def find_older_duplicates(db, keys):
     accessed = [db[key]['accessed']['date-parts'][0] if key in db.keys() and
                 'accessed' in db[key].keys() and 'date-parts' in
                 db[key]['accessed'].keys() else [1900, 1, 1] for key in keys]
@@ -20,16 +20,12 @@ def check_all_against_current(update_group, zotero_key=''):
     csl_db_filename = DB_FILENAME_FMT.format(group=update_group)
     csl_db_path = os.path.join(DB_PATH, csl_db_filename)
     db = json.loads(open(csl_db_path, 'r').read())
-    remove_list = []
     doi_dict = dict([(key, extract_doi(item)) for key, item in db.items()])
     duplicate_dict = {}  # {doi: [key1, key2, ... , keyN]}
     for key, doi in doi_dict.items():
-        if doi and doi in duplicate_dict.keys():
-            duplicate_dict[doi].append(key)
-        else:
-            duplicate_dict[doi] = [key]
-    remove_list.extend(older_duplicates(db, key_list) for doi, key_list in
-                       duplicate_dict.items() if len(key_list) > 1)
+        duplicate_dict.setdefault(doi, []).append(key)
+    remove_list = [find_older_duplicates(db, key_list) for doi, key_list in
+                   duplicate_dict.items() if len(key_list) > 1 and doi]
     update_list = [item for item in db.values()]
     changes = append_from_crossref(update_list,
                                    keys_to_update=crossref_keys_to_update,
@@ -39,9 +35,13 @@ def check_all_against_current(update_group, zotero_key=''):
         version_filename = VERSION_FILENAME_FMT.format(group=update_group)
         version_path = os.path.join(DB_PATH, version_filename)
         md_path = "./static/{group}_publications.md".format(group=update_group)
-        os.remove(csl_db_path)
-        os.remove(version_path)
-        os.remove(md_path)
+        # Remove files, if they exist, to be sure updates take effect
+        if os.path.isfile(csl_db_path):
+            os.remove(csl_db_path)
+        if os.path.isfile(version_path):
+            os.remove(version_path)
+        if os.path.isfile(md_path):
+            os.remove(md_path)
         zotero_feed_main([update_group])
 
 

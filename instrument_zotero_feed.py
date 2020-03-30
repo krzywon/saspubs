@@ -173,10 +173,17 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
                 collection=group_endpoint, db_key=db_key)
             zotero_response = requests.get(url=url)
             zotero_item = json.loads(zotero_response.text)
-        if item in values_to_delete:
-            if push_updates:
-                result = requests.delete(url=url, headers=header)
+            current_version = zotero_item.get("data", {'version': 0}
+                                              ).get("version", 0)
+        if db_key in values_to_delete and push_updates:
+            header.update({'If-Unmodified-Since-Version': str(current_version)})
+            result = requests.delete(url=url, headers=header)
+            if result.status_code != 204:
+                print("Issue deleting {0}: {1}".format(db_key, result))
+            else:
+                print("Deleted item {0} with doi {1}".format(db_key, DOI))
                 changes_made = True
+            header.pop('If-Unmodified-Since-Version')
             # Do not continue with any updates for deleted items
             continue
         DOI = extract_doi(item)
@@ -185,26 +192,23 @@ def append_from_crossref(values, keys_to_update=RETRIEVE_FROM_CROSSREF,
             for key in keys_to_update:
                 if key in crossref_data and (key not in item or (
                         key in item and item[key] != crossref_data[key])):
-                    # CRUFT for API differences - page vs pages keys
-                    if key == 'page':
-                        mods['pages'] = crossref_data[key]
-                    else:
-                        mods[key] = crossref_data[key]
+                    mods[key] = crossref_data[key]
             for key in keys_to_overwrite:
                 if key in crossref_data:
                     mods[key] = crossref_data[key]
         if len(mods) > 0 and push_updates:
-            header['Content-Type'] = 'application/json'
-            current_version = zotero_item.get("data", {'version': 0}
-                                              ).get("version", 0)
-            header['If-Unmodified-Since-Version'] = str(current_version)
+            if 'page' in mods.keys():
+                mods['pages'] = mods.pop('page')
+            header.update({'Content-Type': 'application/json',
+                           'If-Unmodified-Since-Version': str(current_version)})
             mods = json.dumps({"data": mods})
             result = requests.patch(url=url, data=mods, headers=header)
             if result.status_code != 204:
                 print("Issue modifying {doi}: {response}".format(DOI, result))
-            header.pop('Content-Type')
-            header.pop('If-Unmodified-Since-Version')
-            changes_made = True
+            else:
+                changes_made = True
+            for a in ['Content-Type', 'If-Unmodified-Since-Version']:
+                header.pop(a)
     return changes_made
 
 
