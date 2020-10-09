@@ -1,0 +1,32 @@
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Linux build on node ${{ matrix.node_version }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set python version
+        uses: actions/setup-python3
+        with:
+          node-version: 3.6
+
+      - name: Moving build to artifacts directory
+        run: ./shell_scripts/modification_and_duplicate_check.sh ${{ secrets.API_TOKEN_GITHUB }} ${{ secrets.ZOTERO_KEY }}
+
+      - name: Pushes to another repository
+        uses: sasview/saspubs@master
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: 'output'
+          destination-github-username: 'sasview-bot'
+          destination-repository-name: 'saview.github.io'
