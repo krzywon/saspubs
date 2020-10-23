@@ -8,21 +8,31 @@ on:
   pull_request:
     branches: [ master ]
 
+defaults:
+  run:
+    shell: bash
+    working-directory: shell_scripts
+
 jobs:
   build:
-    name: Linux build on node ${{ matrix.node_version }}
+    name: Check for changes and make updates to publications.
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set python version
-        uses: actions/setup-python3
-        with:
-          node-version: 3.6
-
-      - name: Moving build to artifacts directory
+      - uses: actions/checkout@v2
+      - name: Set python
+         uses: actions/setup-python@v2
+         with:
+           python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+      - name: Install Python dependencies
+          uses: py-actions/py-dependency-install@v2
+          with:
+            path: "build_tools/requirements.txt"
+      - name: run shell script that calls python files
         run: ./shell_scripts/modification_and_duplicate_check.sh ${{ secrets.API_TOKEN_GITHUB }} ${{ secrets.ZOTERO_KEY }}
 
-      - name: Pushes to another repository
+      - name: Push changes to sasview.github.io
         uses: sasview/saspubs@master
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
